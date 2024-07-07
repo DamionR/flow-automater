@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@shopify/hydrogen-cli": "^0.12.1"
+  }
+}

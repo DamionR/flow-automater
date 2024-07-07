@@ -1,0 +1,121 @@
+0 verbose cli /opt/homebrew/Cellar/node/22.2.0/bin/node /opt/homebrew/bin/npm
+1 info using npm@10.7.0
+2 info using node@v22.2.0
+3 silly config:load:file:/opt/homebrew/lib/node_modules/npm/npmrc
+4 silly config:load:file:/Users/damionrashford/reservation-app/.npmrc
+5 silly config:load:file:/Users/damionrashford/.npmrc
+6 silly config:load:file:/opt/homebrew/etc/npmrc
+7 verbose title npm install
+8 verbose argv "install"
+9 verbose logfile logs-max:10 dir:/Users/damionrashford/.npm/_logs/2024-07-07T03_55_15_769Z-
+10 verbose logfile /Users/damionrashford/.npm/_logs/2024-07-07T03_55_15_769Z-debug-0.log
+11 silly logfile start cleaning logs, removing 3 files
+12 silly idealTree buildDeps
+13 silly fetch manifest eslint@^7.5.0 || ^8.0.0 || ^9.0.0
+14 silly logfile done cleaning log files
+15 http fetch GET 200 https://registry.npmjs.org/eslint 32ms (cache hit)
+16 silly placeDep ROOT eslint@9.6.0 OK for: @babel/eslint-parser@7.24.7 want: ^7.5.0 || ^8.0.0 || ^9.0.0
+17 silly fetch manifest @eslint/config-array@^0.17.0
+18 silly fetch manifest @eslint/eslintrc@^3.1.0
+19 silly fetch manifest @eslint/js@9.6.0
+20 silly fetch manifest @humanwhocodes/module-importer@^1.0.1
+21 silly fetch manifest @humanwhocodes/retry@^0.3.0
+22 silly fetch manifest ajv@^6.12.4
+23 silly fetch manifest cross-spawn@^7.0.2
+24 http fetch GET 200 https://registry.npmjs.org/@eslint%2fconfig-array 5ms (cache hit)
+25 silly fetch manifest escape-string-regexp@^4.0.0
+26 http fetch GET 200 https://registry.npmjs.org/@eslint%2feslintrc 7ms (cache hit)
+27 silly fetch manifest eslint-scope@^8.0.1
+28 http fetch GET 200 https://registry.npmjs.org/@eslint%2fjs 7ms (cache hit)
+29 silly fetch manifest eslint-visitor-keys@^4.0.0
+30 http fetch GET 200 https://registry.npmjs.org/@humanwhocodes%2fretry 8ms (cache hit)
+31 silly fetch manifest espree@^10.1.0
+32 http fetch GET 200 https://registry.npmjs.org/@humanwhocodes%2fmodule-importer 9ms (cache hit)
+33 silly fetch manifest esquery@^1.5.0
+34 http fetch GET 200 https://registry.npmjs.org/ajv 11ms (cache hit)
+35 silly fetch manifest fast-deep-equal@^3.1.3
+36 http fetch GET 200 https://registry.npmjs.org/cross-spawn 19ms (cache hit)
+37 silly fetch manifest file-entry-cache@^8.0.0
+38 http fetch GET 200 https://registry.npmjs.org/escape-string-regexp 17ms (cache hit)
+39 silly fetch manifest find-up@^5.0.0
+40 http fetch GET 200 https://registry.npmjs.org/esquery 14ms (cache hit)
+41 silly fetch manifest glob-parent@^6.0.2
+42 http fetch GET 200 https://registry.npmjs.org/eslint-visitor-keys 16ms (cache hit)
+43 silly fetch manifest imurmurhash@^0.1.4
+44 http fetch GET 200 https://registry.npmjs.org/espree 17ms (cache hit)
+45 silly fetch manifest is-path-inside@^3.0.3
+46 http fetch GET 200 https://registry.npmjs.org/eslint-scope 19ms (cache hit)
+47 silly fetch manifest json-stable-stringify-without-jsonify@^1.0.1
+48 http fetch GET 200 https://registry.npmjs.org/fast-deep-equal 9ms (cache hit)
+49 silly fetch manifest levn@^0.4.1
+50 http fetch GET 200 https://registry.npmjs.org/file-entry-cache 7ms (cache hit)
+51 silly fetch manifest lodash.merge@^4.6.2
+52 http fetch GET 200 https://registry.npmjs.org/find-up 6ms (cache hit)
+53 silly fetch manifest optionator@^0.9.3
+54 http fetch GET 200 https://registry.npmjs.org/glob-parent 5ms (cache hit)
+55 silly fetch manifest strip-ansi@^6.0.1
+56 http fetch GET 200 https://registry.npmjs.org/is-path-inside 4ms (cache hit)
+57 silly fetch manifest text-table@^0.2.0
+58 http fetch GET 200 https://registry.npmjs.org/json-stable-stringify-without-jsonify 4ms (cache hit)
+59 http fetch GET 200 https://registry.npmjs.org/imurmurhash 6ms (cache hit)
+60 http fetch GET 200 https://registry.npmjs.org/levn 5ms (cache hit)
+61 http fetch GET 200 https://registry.npmjs.org/lodash.merge 4ms (cache hit)
+62 http fetch GET 200 https://registry.npmjs.org/optionator 4ms (cache hit)
+63 http fetch GET 200 https://registry.npmjs.org/strip-ansi 4ms (cache hit)
+64 http fetch GET 200 https://registry.npmjs.org/text-table 4ms (cache hit)
+65 silly fetch manifest eslint@^8.0.0
+66 silly fetch manifest react@^18.0.0
+67 http fetch GET 200 https://registry.npmjs.org/react 8ms (cache hit)
+68 silly placeDep ROOT eslint@8.57.0 REPLACE for: @remix-run/eslint-config@2.10.2 want: ^8.0.0
+69 verbose stack Error: could not resolve
+69 verbose stack     at PlaceDep.failPeerConflict (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/place-dep.js:503:25)
+69 verbose stack     at new PlaceDep (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/place-dep.js:157:21)
+69 verbose stack     at #buildDepStep (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:939:18)
+69 verbose stack     at async Arborist.buildIdealTree (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:203:7)
+69 verbose stack     at async Promise.all (index 1)
+69 verbose stack     at async Arborist.reify (/opt/homebrew/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:131:5)
+69 verbose stack     at async Install.exec (/opt/homebrew/lib/node_modules/npm/lib/commands/install.js:150:5)
+69 verbose stack     at async module.exports (/opt/homebrew/lib/node_modules/npm/lib/cli/entry.js:74:5)
+70 verbose cwd /Users/damionrashford/reservation-app
+71 verbose Darwin 23.5.0
+72 verbose node v22.2.0
+73 verbose npm  v10.7.0
+74 error code ERESOLVE
+75 error ERESOLVE could not resolve
+76 error
+77 error While resolving: @remix-run/eslint-config@2.10.2
+77 error Found: react@17.0.2
+77 error node_modules/react
+77 error   dev react@"^17.0.2" from the root project
+77 error   peer react@">=16.8" from @remix-run/server-runtime@1.6.0
+77 error   node_modules/@remix-run/node/node_modules/@remix-run/server-runtime
+77 error     @remix-run/server-runtime@"1.6.0" from @remix-run/node@1.6.0
+77 error     node_modules/@remix-run/node
+77 error       dev @remix-run/node@"^1.6.0" from the root project
+77 error   7 more (@remix-run/react, @shopify/app-bridge-react, ...)
+77 error
+77 error Could not resolve dependency:
+77 error peer react@"^18.0.0" from @remix-run/eslint-config@2.10.2
+77 error node_modules/@remix-run/eslint-config
+77 error   dev @remix-run/eslint-config@"^2.10.2" from the root project
+77 error
+77 error Conflicting peer dependency: react@18.3.1
+77 error node_modules/react
+77 error   peer react@"^18.0.0" from @remix-run/eslint-config@2.10.2
+77 error   node_modules/@remix-run/eslint-config
+77 error     dev @remix-run/eslint-config@"^2.10.2" from the root project
+77 error
+77 error Fix the upstream dependency conflict, or retry
+77 error this command with --force or --legacy-peer-deps
+77 error to accept an incorrect (and potentially broken) dependency resolution.
+78 error
+78 error
+78 error For a full report see:
+78 error /Users/damionrashford/.npm/_logs/2024-07-07T03_55_15_769Z-eresolve-report.txt
+79 verbose exit 1
+80 verbose code 1
+81 silly unfinished npm timer reify 1720324515956
+82 silly unfinished npm timer reify:loadTrees 1720324515957
+83 silly unfinished npm timer idealTree:buildDeps 1720324516015
+84 silly unfinished npm timer idealTree:node_modules/@remix-run/eslint-config 1720324516097
+85 error A complete log of this run can be found in: /Users/damionrashford/.npm/_logs/2024-07-07T03_55_15_769Z-debug-0.log

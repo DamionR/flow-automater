@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@shopify/create-hydrogen": "^4.3.14"
+  }
+}

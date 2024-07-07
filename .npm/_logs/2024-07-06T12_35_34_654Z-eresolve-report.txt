@@ -1,0 +1,51 @@
+'Log files:
+/Users/damionrashford/.npm/_logs/2024-07-06T12_35_34_654Z-debug-0.log
+
+# npm resolution error report
+
+While resolving: @shopify/polaris@6.6.0
+Found: react@18.3.1
+node_modules/react
+  react@"^18.0.0" from the root project
+  peer react@"^16.0.0 || ^17.0.0 || ^18.0.0" from @shopify/app-bridge-react@2.3.1
+  node_modules/@shopify/app-bridge-react
+    @shopify/app-bridge-react@"^2.0.0" from the root project
+  peer react@"^18.3.1" from react-dom@18.3.1
+  node_modules/react-dom
+    react-dom@"^18.0.0" from the root project
+    peer react-dom@">=16.8" from react-router-dom@6.24.1
+    node_modules/react-router-dom
+      react-router-dom@"^6.0.0" from the root project
+    peer react-dom@">=16.6.0" from react-transition-group@4.4.5
+    node_modules/react-transition-group
+      react-transition-group@"^4.4.1" from @shopify/polaris@6.6.0
+      node_modules/@shopify/polaris
+        @shopify/polaris@"^6.0.0" from the root project
+  peer react@">=16.8" from react-router@6.24.1
+  node_modules/react-router
+    react-router@"6.24.1" from react-router-dom@6.24.1
+    node_modules/react-router-dom
+      react-router-dom@"^6.0.0" from the root project
+  peer react@">=16.8" from react-router-dom@6.24.1
+  node_modules/react-router-dom
+    react-router-dom@"^6.0.0" from the root project
+  peer react@">=16.6.0" from react-transition-group@4.4.5
+  node_modules/react-transition-group
+    react-transition-group@"^4.4.1" from @shopify/polaris@6.6.0
+    node_modules/@shopify/polaris
+      @shopify/polaris@"^6.0.0" from the root project
+
+Could not resolve dependency:
+peer react@"^16.9.0" from @shopify/polaris@6.6.0
+node_modules/@shopify/polaris
+  @shopify/polaris@"^6.0.0" from the root project
+
+Conflicting peer dependency: react@16.14.0
+node_modules/react
+  peer react@"^16.9.0" from @shopify/polaris@6.6.0
+  node_modules/@shopify/polaris
+    @shopify/polaris@"^6.0.0" from the root project
+
+Fix the upstream dependency conflict, or retry
+this command with --force or --legacy-peer-deps
+to accept an incorrect (and potentially broken) dependency resolution.

@@ -1,0 +1,500 @@
+{
+	"name": "remix-forge",
+	"displayName": "Remix Forge",
+	"description": "Remix Forge - A VS Code extension for Remix.run applications that super charges your development with a ever-growing set of functionalities.",
+	"version": "0.5.2",
+	"icon": "./remix-forge-logo.png",
+	"keywords": [
+		"Remix",
+		"remix-auth",
+		"Generator",
+		"Typescript",
+		"React",
+		"Snippets",
+		"conform",
+		"form-handling",
+		"remix-hook-form",
+		"form-generator",
+		"reactjs",
+		"testing-library",
+		"jest",
+		"vitest",
+		"shadncn-ui",
+		"shadcn"
+	],
+	"publisher": "CodeForge",
+	"engines": {
+		"vscode": "^1.78.0"
+	},
+	"categories": [
+		"Snippets",
+		"Extension Packs",
+		"Testing",
+		"Other"
+	],
+	"activationEvents": [
+		"onStartupFinished",
+		"onLanguage:typescriptreact"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"languages": [
+			{
+				"id": "typescriptreact",
+				"extensions": [
+					".tsx"
+				],
+				"aliases": [
+					"TypeScript React"
+				]
+			}
+		],
+		"codeLensProvider": [
+			{
+				"language": "typescript",
+				"scheme": "file",
+				"command": {
+					"command": "remix-forge.openUrl",
+					"title": "Open URL",
+					"arguments": []
+				}
+			}
+		],
+		"configuration": {
+			"title": "Remix Forge",
+			"properties": {
+				"remix-forge.urlGenerator": {
+					"type": "string",
+					"default": "",
+					"description": "Pass in a custom function to be used to generate the relative part of the URL for the code lens. The function will receive the current path of the component as the first argument. eg: (filePath) => `something` will return `localhost:3000/something` as the URL.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.urlDebug": {
+					"type": "boolean",
+					"default": false,
+					"description": "Allows you to debug your custom urlGenerator function by showing the url output it generates in the output panel."
+				},
+				"remix-forge.urlGeneratorPaths": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"description": "Title to display above the component eg: Staging => Open Staging URL"
+							},
+							"url": {
+								"type": "string",
+								"description": "URL of your site eg: http://staging.dev.site"
+							}
+						}
+					},
+					"default": [
+						{
+							"title": "Local",
+							"url": "http://localhost:3000"
+						}
+					]
+				},
+				"remix-forge.preselected": {
+					"type": "array",
+					"enum": [
+						"all",
+						"route",
+						"loader",
+						"action",
+						"meta",
+						"handle",
+						"links",
+						"errorBoundary",
+						"revalidate",
+						"headers"
+					],
+					"description": "Preselects parts to generate when creating a new route."
+				},
+				"remix-forge.orderOfGeneration": {
+					"type": "array",
+					"enum": [
+						"links",
+						"meta",
+						"handler",
+						"headers",
+						"loader",
+						"action",
+						"component",
+						"errorBoundary",
+						"revalidate"
+					],
+					"minItems": 9,
+					"maxItems": 9,
+					"description": "Order of the parts to be generated (top to bottom). You have to include all of them otherwise you won't generate parts if they are not included in this array."
+				},
+				"remix-forge.loader": {
+					"type": "string",
+					"default": "",
+					"description": "Remix loader code to generate instead of the default one. Leave empty to use the default loader.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.action": {
+					"type": "string",
+					"default": "",
+					"description": "Remix action code to generate instead of the default one. Leave empty to use the default action.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.meta": {
+					"type": "string",
+					"default": "",
+					"description": "Remix meta code to generate instead of the default one. Leave empty to use the default meta.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.handle": {
+					"type": "string",
+					"default": "",
+					"description": "Remix handle code to generate instead of the default one. Leave empty to use the default handle.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.component": {
+					"type": "string",
+					"default": "",
+					"description": "Remix component code to generate instead of the default one. Leave empty to use the default component.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.runtimeDependency": {
+					"type": "string",
+					"default": "",
+					"description": "Runtime dependency to use instead of the default one (@remix-run/node)"
+				},
+				"remix-forge.links": {
+					"type": "string",
+					"default": "",
+					"description": "Remix links code to generate instead of the default one. Leave empty to use the default links.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.errorBoundary": {
+					"type": "string",
+					"default": "",
+					"description": "Remix errorBoundary code to generate instead of the default one. Leave empty to use the default errorBoundary.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.revalidate": {
+					"type": "string",
+					"default": "",
+					"description": "Remix revalidate code to generate instead of the default one. Leave empty to use the default revalidate.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.headers": {
+					"type": "string",
+					"default": "",
+					"description": "Remix headers code to generate instead of the default one. Leave empty to use the default headers.",
+					"editPresentation": "multilineText"
+				},
+				"remix-forge.importAuthFrom": {
+					"type": "string",
+					"default": "",
+					"description": "Generate the auth import from this path. Leave empty to use the default one (~/services/auth.server)."
+				},
+				"remix-forge.barrelizeRemoveExtensions": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"default": [
+						"tsx",
+						"ts",
+						"jsx",
+						"js"
+					],
+					"description": "Tell the barrelize command to remove these extensions when generating the barrel file."
+				},
+				"remix-forge.barrelizeIndexExtension": {
+					"type": "string",
+					"default": "ts",
+					"description": "Tell the barrelize command what extension to use for the index file."
+				},
+				"remix-forge.barrelizeIgnoreFiles": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"default": [
+						"index",
+						"test",
+						"stories"
+					],
+					"description": "Tell the barrelize command to ignore all the files containing the strings provided."
+				},
+				"remix-forge.formHandler": {
+					"type": "string",
+					"default": "remix-hook-form",
+					"enum": [
+						"remix-hook-form",
+						"conform"
+					],
+					"description": "What form handling library you want your project to use by default (remix-hook-form or conform)."
+				},
+				"remix-forge.searchStrategy": {
+					"type": "string",
+					"default": "one-up",
+					"enum": [
+						"all",
+						"one-up",
+						"sub"
+					],
+					"description": "How far to search for a file from the current directory. All will search the whole project, one-up will search the current directory and its parent, sub will search the current directory and its children."
+				},
+				"remix-forge.componentFolder": {
+					"type": "string",
+					"description": "The folder where the shadcn/ui components will be generated."
+				},
+				"remix-forge.customActionImports": {
+					"type": "string",
+					"description": "Allows you to add custom imports whenever you generate a route with an action inside"
+				},
+				"remix-forge.customLoaderImports": {
+					"type": "string",
+					"description": "Allows you to add custom imports whenever you generate a route with a loader inside"
+				},
+				"remix-forge.formRouteTemplate": {
+					"type": "string",
+					"description": "The template to use when generating a form route"
+				},
+				"remix-forge.latestRemixNotification": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether to show a notification when a new version of Remix is available"
+				},
+				"remix-forge.devToolsPort": {
+					"type": "number",
+					"default": 3003,
+					"description": "Port number that allows the Remix dev tools to communicate with the extension"
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "remix-forge.generateRemixRoute",
+				"title": "Generate Remix Route"
+			},
+			{
+				"command": "remix-forge.generateLoader",
+				"title": "Insert Remix Loader"
+			},
+			{
+				"command": "remix-forge.generateAction",
+				"title": "Insert Remix Action"
+			},
+			{
+				"command": "remix-forge.generateErrorBoundary",
+				"title": "Insert Remix ErrorBoundary"
+			},
+			{
+				"command": "remix-forge.generateHeaders",
+				"title": "Insert Remix headers function"
+			},
+			{
+				"command": "remix-forge.generateLinks",
+				"title": "Insert Remix links function"
+			},
+			{
+				"command": "remix-forge.generateRevalidate",
+				"title": "Insert Remix shouldRevalidate function"
+			},
+			{
+				"command": "remix-forge.generateMeta",
+				"title": "Insert Remix meta function"
+			},
+			{
+				"command": "remix-forge.generateShadcnUI",
+				"title": "Add shadcn-ui components to your project"
+			},
+			{
+				"command": "remix-forge.initShadcnUi",
+				"title": "Initialize shadcn-ui config in your project"
+			},
+			{
+				"command": "remix-forge.linting",
+				"title": "Initialize eslint and prettier"
+			},
+			{
+				"command": "remix-forge.generateTests",
+				"title": "Generate Tests"
+			},
+			{
+				"command": "remix-forge.updateRemix",
+				"title": "Update Remix Version"
+			},
+			{
+				"command": "remix-forge.generateRemixFormRoute",
+				"title": "Generate Remix Form Route"
+			},
+			{
+				"command": "remix-forge.devTools",
+				"title": "Start Remix Dev Tools"
+			},
+			{
+				"command": "remix-forge.generateAuth",
+				"title": "Generate Authentication Workflow"
+			},
+			{
+				"command": "remix-forge.generatePrisma",
+				"title": "Initialize Prisma"
+			},
+			{
+				"command": "remix-forge.openUrl",
+				"title": "Opens url in browser"
+			},
+			{
+				"command": "remix-forge.barrelize",
+				"title": "Barrelize folder"
+			},
+			{
+				"command": "remix-forge.generateAuthSnippet",
+				"title": "Generates authentication for loaders/actions"
+			},
+			{
+				"command": "remix-forge.flattenRoutes",
+				"title": "Convert routes to v2 convention"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "remix-forge.generateLoader",
+					"group": "1_Remix@10"
+				},
+				{
+					"command": "remix-forge.generateAction",
+					"group": "1_Remix@20"
+				},
+				{
+					"command": "remix-forge.generateErrorBoundary",
+					"group": "1_Remix@30"
+				},
+				{
+					"command": "remix-forge.generateMeta",
+					"group": "1_Remix@40"
+				},
+				{
+					"command": "remix-forge.generateHeaders",
+					"group": "1_Remix@20"
+				},
+				{
+					"command": "remix-forge.generateLinks",
+					"group": "1_Remix@30"
+				},
+				{
+					"command": "remix-forge.generateRevalidate",
+					"group": "1_Remix@40"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "remix-forge.generateRemixRoute",
+					"when": "explorerResourceIsFolder",
+					"group": "2_Remix@10"
+				},
+				{
+					"command": "remix-forge.generateRemixFormRoute",
+					"when": "explorerResourceIsFolder",
+					"group": "2_Remix@20"
+				},
+				{
+					"command": "remix-forge.generateTests",
+					"when": "resourceExtname == .ts || resourceExtname == .tsx",
+					"group": "2_Remix@30"
+				},
+				{
+					"command": "remix-forge.flattenRoutes",
+					"when": "explorerResourceIsFolder && resourceFilename =~ /routes/",
+					"group": "2_Remix@30"
+				},
+				{
+					"command": "remix-forge.generateAuth",
+					"when": "explorerResourceIsFolder && resourceFilename =~ /app/",
+					"group": "2_Remix@40"
+				},
+				{
+					"command": "remix-forge.generateShadcnUI",
+					"when": "explorerResourceIsFolder && resourceFilename =~ /app/",
+					"group": "2_Remix@35"
+				},
+				{
+					"command": "remix-forge.generatePrisma",
+					"when": "explorerResourceIsFolder && resourceFilename =~ /app/",
+					"group": "2_Remix@40"
+				},
+				{
+					"command": "remix-forge.updateRemix",
+					"when": " resourceFilename =~ /package.json/",
+					"group": "2_Remix@10"
+				},
+				{
+					"command": "remix-forge.linting",
+					"when": " resourceFilename =~ /package.json/",
+					"group": "2_Remix@15"
+				},
+				{
+					"command": "remix-forge.initShadcnUi",
+					"when": " resourceFilename =~ /package.json/",
+					"group": "2_Remix@20"
+				},
+				{
+					"command": "remix-forge.barrelize",
+					"when": "explorerResourceIsFolder",
+					"group": "2_Remix@60"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js",
+		"dev": "npm run watch"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Code-Forge-Net/Remix-Forge"
+	},
+	"devDependencies": {
+		"@types/glob": "^8.1.0",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "16.x",
+		"@types/vscode": "^1.78.0",
+		"@types/ws": "^8.5.5",
+		"@typescript-eslint/eslint-plugin": "^5.59.1",
+		"@typescript-eslint/parser": "^5.59.1",
+		"@vscode/test-electron": "^2.3.0",
+		"eslint": "^8.39.0",
+		"glob": "^8.1.0",
+		"mocha": "^10.2.0",
+		"ts-loader": "^9.4.2",
+		"typescript": "^5.1.3",
+		"webpack": "^5.81.0",
+		"webpack-cli": "^5.0.2"
+	},
+	"dependencies": {
+		"execa": "^7.1.1",
+		"pidtree": "^0.6.0",
+		"ws": "^8.13.0"
+	},
+	"__metadata": {
+		"id": "fa723f80-297b-42c3-b82b-667a91bedc02",
+		"publisherId": "23481123-f676-477c-a06a-4e4569d2b70f",
+		"publisherDisplayName": "Code Forge",
+		"targetPlatform": "undefined",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1720318505385,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery"
+	}
+}

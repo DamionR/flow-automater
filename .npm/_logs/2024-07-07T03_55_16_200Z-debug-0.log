@@ -1,0 +1,13 @@
+0 verbose cli /opt/homebrew/Cellar/node/22.2.0/bin/node /opt/homebrew/bin/npm
+1 info using npm@10.7.0
+2 info using node@v22.2.0
+3 silly config:load:file:/opt/homebrew/lib/node_modules/npm/npmrc
+4 silly config:load:file:/Users/damionrashford/reservation-app/.npmrc
+5 silly config:load:file:/Users/damionrashford/.npmrc
+6 silly config:load:file:/opt/homebrew/etc/npmrc
+7 verbose title npm prefix
+8 verbose argv "prefix"
+9 verbose logfile logs-max:10 dir:/Users/damionrashford/.npm/_logs/2024-07-07T03_55_16_200Z-
+10 verbose logfile /Users/damionrashford/.npm/_logs/2024-07-07T03_55_16_200Z-debug-0.log
+11 verbose exit 0
+12 info ok
