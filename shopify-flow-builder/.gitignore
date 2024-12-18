@@ -21,6 +21,23 @@ yarn-error.log*
 # Editor and system files
 .DS_Store
 Thumbs.db
+.CFUserTextEncoding
+
+# Personal configuration files
+.bashrc
+.gitconfig
+.viminfo
+
+# Editor-specific files
+.vscode/
+.vscode-react-native/
+
+# Cache or temp directories
+.cache/
+.dbclient/
+.config/
+.local/
+.npm/
 
 # ESLint cache
 node_modules/.cache/eslint
