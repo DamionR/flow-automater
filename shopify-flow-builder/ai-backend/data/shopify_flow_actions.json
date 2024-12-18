@@ -1,0 +1,1440 @@
+{
+  "actions": [
+    {
+      "name": "add_catalog_to_company_location",
+      "description": "Adds a catalog to a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "catalog_id",
+          "type": "string",
+          "description": "The ID of the catalog."
+        }
+      ]
+    },
+    {
+      "name": "add_customer_tags",
+      "description": "Adds tags to a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the customer."
+        }
+      ]
+    },
+    {
+      "name": "add_draft_order_tags",
+      "description": "Adds tags to a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the draft order."
+        }
+      ]
+    },
+    {
+      "name": "add_order_line_item",
+      "description": "Adds a line item to an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        },
+        {
+          "name": "quantity",
+          "type": "number",
+          "description": "The quantity of the variant to add."
+        }
+      ]
+    },
+    {
+      "name": "add_order_tags",
+      "description": "Adds tags to an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the order."
+        }
+      ]
+    },
+    {
+      "name": "add_product_tags",
+      "description": "Adds tags to a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the product."
+        }
+      ]
+    },
+    {
+      "name": "add_product_to_collections",
+      "description": "Adds a product to collections.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "collection_ids",
+          "type": "list",
+          "description": "The IDs of the collections to add the product to."
+        }
+      ]
+    },
+    {
+      "name": "archive_order",
+      "description": "Archives an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order to archive."
+        }
+      ]
+    },
+    {
+      "name": "cancel_order",
+      "description": "Cancels an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "reason",
+          "type": "string",
+          "description": "The reason for canceling the order."
+        }
+      ]
+    },
+    {
+      "name": "cancel_return",
+      "description": "Cancels a return.",
+      "category": "return",
+      "parameters": [
+        {
+          "name": "return_id",
+          "type": "string",
+          "description": "The ID of the return to cancel."
+        }
+      ]
+    },
+    {
+      "name": "capture_payment",
+      "description": "Captures a payment.",
+      "category": "payment",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order to capture payment for."
+        }
+      ]
+    },
+    {
+      "name": "count",
+      "description": "Counts the number of items in a list.",
+      "category": "list",
+      "parameters": [
+        {
+          "name": "list",
+          "type": "list",
+          "description": "The list to count items from."
+        }
+      ]
+    },
+    {
+      "name": "create_redirect_url",
+      "description": "Creates a redirect URL.",
+      "category": "url",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "The path for the redirect URL."
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "The target URL for the redirect."
+        }
+      ]
+    },
+    {
+      "name": "delete_redirect_urls",
+      "description": "Deletes redirect URLs.",
+      "category": "url",
+      "parameters": [
+        {
+          "name": "paths",
+          "type": "list",
+          "description": "The paths of the redirect URLs to delete."
+        }
+      ]
+    },
+    {
+      "name": "create_metafield_definition",
+      "description": "Creates a metafield definition.",
+      "category": "metafield",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The name of the metafield definition."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield definition."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield definition."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "The type of the metafield definition (e.g., 'string', 'integer', 'json')."
+        }
+      ]
+    },
+    {
+      "name": "delete_company",
+      "description": "Deletes a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company to delete."
+        }
+      ]
+    },
+    {
+      "name": "delete_customer",
+      "description": "Deletes a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer to delete."
+        }
+      ]
+    },
+    {
+      "name": "delete_product_variant",
+      "description": "Deletes a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant to delete."
+        }
+      ]
+    },
+    {
+      "name": "delete_product",
+      "description": "Deletes a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product to delete."
+        }
+      ]
+    },
+    {
+      "name": "for_each",
+      "description": "Iterates over a list and performs actions for each item.",
+      "category": "list",
+      "parameters": [
+        {
+          "name": "list",
+          "type": "list",
+          "description": "The list to iterate over."
+        },
+        {
+          "name": "actions",
+          "type": "list",
+          "description": "The actions to perform for each item in the list."
+        }
+      ]
+    },
+    {
+      "name": "get_collection_data",
+      "description": "Retrieves data for a collection.",
+      "category": "collection",
+      "parameters": [
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        }
+      ]
+    },
+    {
+      "name": "get_company_data",
+      "description": "Retrieves data for a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        }
+      ]
+    },
+    {
+      "name": "get_company_location_data",
+      "description": "Retrieves data for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        }
+      ]
+    },
+    {
+      "name": "get_customer_data",
+      "description": "Retrieves data for a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        }
+      ]
+    },
+    {
+      "name": "get_discount_data",
+      "description": "Retrieves data for a discount.",
+      "category": "discount",
+      "parameters": [
+        {
+          "name": "discount_id",
+          "type": "string",
+          "description": "The ID of the discount."
+        }
+      ]
+    },
+    {
+      "name": "get_draft_order_data",
+      "description": "Retrieves data for a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        }
+      ]
+    },
+    {
+      "name": "get_fulfillment_order_data",
+      "description": "Retrieves data for a fulfillment order.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "get_order_data",
+      "description": "Retrieves data for an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "get_selling_plan_group_data",
+      "description": "Retrieves data for a selling plan group.",
+      "category": "selling_plan",
+      "parameters": [
+        {
+          "name": "selling_plan_group_id",
+          "type": "string",
+          "description": "The ID of the selling plan group."
+        }
+      ]
+    },
+    {
+      "name": "get_subscription_billing_attempt_data",
+      "description": "Retrieves data for a subscription billing attempt.",
+      "category": "subscription",
+      "parameters": [
+        {
+          "name": "subscription_billing_attempt_id",
+          "type": "string",
+          "description": "The ID of the subscription billing attempt."
+        }
+      ]
+    },
+    {
+      "name": "get_product_data",
+      "description": "Retrieves data for a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        }
+      ]
+    },
+    {
+      "name": "get_product_variant_data",
+      "description": "Retrieves data for a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        }
+      ]
+    },
+    {
+      "name": "get_subscription_contract_data",
+      "description": "Retrieves data for a subscription contract.",
+      "category": "subscription",
+      "parameters": [
+        {
+          "name": "subscription_contract_id",
+          "type": "string",
+          "description": "The ID of the subscription contract."
+        }
+      ]
+    },
+    {
+      "name": "hold_fulfillment_order",
+      "description": "Holds a fulfillment order.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "description": "The reason for holding the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "mark_fulfillment_order_as_fulfilled",
+      "description": "Marks a fulfillment order as fulfilled.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "log_output",
+      "description": "Logs output to the workflow activity log.",
+      "category": "logging",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "string",
+          "description": "The message to log."
+        }
+      ]
+    },
+    {
+      "name": "look_up_customer_in_segment",
+      "description": "Looks up a customer in a segment.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "segment_id",
+          "type": "string",
+          "description": "The ID of the segment."
+        }
+      ]
+    },
+    {
+      "name": "mark_order_as_paid",
+      "description": "Marks an order as paid.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "move_fulfillment_order",
+      "description": "Moves a fulfillment order to a different location.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        },
+        {
+          "name": "new_location_id",
+          "type": "string",
+          "description": "The ID of the new location."
+        }
+      ]
+    },
+    {
+      "name": "publish_product",
+      "description": "Publishes a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        }
+      ]
+    },
+    {
+      "name": "release_fulfillment_order_holds",
+      "description": "Releases holds on a fulfillment order.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "remove_catalog_from_company_location",
+      "description": "Removes a catalog from a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "catalog_id",
+          "type": "string",
+          "description": "The ID of the catalog."
+        }
+      ]
+    },
+    {
+      "name": "remove_collection_metafield",
+      "description": "Removes a metafield from a collection.",
+      "category": "collection",
+      "parameters": [
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_company_metafield",
+      "description": "Removes a metafield from a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_company_location_metafield",
+      "description": "Removes a metafield from a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_customer_metafield",
+      "description": "Removes a metafield from a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_customer_tags",
+      "description": "Removes tags from a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the customer."
+        }
+      ]
+    },
+    {
+      "name": "remove_draft_order_metafield",
+      "description": "Removes a metafield from a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_draft_order_tags",
+      "description": "Removes tags from a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the draft order."
+        }
+      ]
+    },
+    {
+      "name": "remove_order_metafield",
+      "description": "Removes a metafield from an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_order_tags",
+      "description": "Removes tags from an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the order."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_from_collection",
+      "description": "Removes a product from a collection.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_metafield",
+      "description": "Removes a metafield from a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_tags",
+      "description": "Removes tags from a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the product."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_variant_metafield",
+      "description": "Removes a metafield from a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_shop_metafield",
+      "description": "Removes a metafield from a shop.",
+      "category": "shop",
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "run_code",
+      "description": "Runs custom code within a workflow.",
+      "category": "code",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "string",
+          "description": "The code to run."
+        }
+      ]
+    },
+    {
+      "name": "send_internal_email",
+      "description": "Sends an email to a staff member.",
+      "category": "email",
+      "parameters": [
+        {
+          "name": "recipient",
+          "type": "string",
+          "description": "The email address of the recipient."
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "description": "The subject of the email."
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "description": "The body of the email."
+        }
+      ]
+    },
+    {
+      "name": "submit_fulfillment_request",
+      "description": "Submits a fulfillment request.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "line_item_ids",
+          "type": "list",
+          "description": "The IDs of the line items to fulfill."
+        }
+      ]
+    },
+    {
+      "name": "send_admin_api_request",
+      "description": "Sends an API request to the Shopify Admin API.",
+      "category": "api",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "The HTTP method (e.g., 'GET', 'POST', 'PUT', 'DELETE')."
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "The API endpoint URL."
+        },
+        {
+          "name": "headers",
+          "type": "object",
+          "description": "The request headers."
+        },
+        {
+          "name": "body",
+          "type": "object",
+          "description": "The request body."
+        }
+      ]
+    },
+    {
+      "name": "send_http_request",
+      "description": "Sends an HTTP request to an external service.",
+      "category": "webhook",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "The HTTP method (e.g., 'GET', 'POST', 'PUT', 'DELETE')."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "The URL to send the request to."
+        },
+        {
+          "name": "headers",
+          "type": "object",
+          "description": "The request headers."
+        },
+        {
+          "name": "body",
+          "type": "object",
+          "description": "The request body."
+        }
+      ]
+    },
+    {
+      "name": "send_b2b_access_email",
+      "description": "Sends a B2B access email to a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        }
+      ]
+    },
+    {
+      "name": "send_payment_reminder",
+      "description": "Sends a payment reminder to a customer.",
+      "category": "payment",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "send_draft_order_invoice",
+      "description": "Sends a draft order invoice to a customer.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        }
+      ]
+    },
+    {
+      "name": "send_order_invoice",
+      "description": "Sends an order invoice to a customer.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "send_shopify_alert_for_errors",
+      "description": "Sends a Shopify alert for errors.",
+      "category": "notification",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "string",
+          "description": "The error message."
+        }
+      ]
+    },
+    {
+      "name": "sum",
+      "description": "Calculates the sum of numbers in a list.",
+      "category": "list",
+      "parameters": [
+        {
+          "name": "list",
+          "type": "list",
+          "description": "The list of numbers to sum."
+        }
+      ]
+    },
+    {
+      "name": "unarchive_order",
+      "description": "Unarchives an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order to unarchive."
+        }
+      ]
+    },
+    {
+      "name": "unpublish_product",
+      "description": "Unpublishes a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        }
+      ]
+    },
+    {
+      "name": "update_collection_metafield",
+      "description": "Updates a metafield on a collection.",
+      "category": "collection",
+      "parameters": [
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_company_note",
+      "description": "Updates a note on a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_company_metafield",
+      "description": "Updates a metafield on a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_company_location_note",
+      "description": "Updates a note on a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_company_location_metafield",
+      "description": "Updates a metafield on a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_company_location_payment_terms",
+      "description": "Updates the payment terms for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "payment_terms",
+          "type": "string",
+          "description": "The new payment terms."
+        }
+      ]
+    },
+    {
+      "name": "update_checkout_to_draft_for_company_location",
+      "description": "Updates a checkout to a draft order for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "checkout_id",
+          "type": "string",
+          "description": "The ID of the checkout."
+        },
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        }
+      ]
+    },
+    {
+      "name": "update_editable_shipping_address_for_company_location",
+      "description": "Updates the editable shipping address for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "address",
+          "type": "object",
+          "description": "The new shipping address."
+        }
+      ]
+    },
+    {
+      "name": "update_customer_metafield",
+      "description": "Updates a metafield on a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_customer_note",
+      "description": "Updates a note on a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_draft_order_metafield",
+      "description": "Updates a metafield on a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_draft_order_note",
+      "description": "Updates a note on a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_order_metafield",
+      "description": "Updates a metafield on an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_order_note",
+      "description": "Updates a note on an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_product_metafield",
+      "description": "Updates a metafield on a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_product_status",
+      "description": "Updates the status of a product (e.g., 'active', 'archived', 'draft').",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "The new status of the product."
+        }
+      ]
+    },
+    {
+      "name": "update_product_variant_metafield",
+      "description": "Updates a metafield on a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_shop_metafield",
+      "description": "Updates a metafield on a shop.",
+      "category": "shop",
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "wait",
+      "description": "Pauses the workflow for a specified amount of time.",
+      "category": "workflow",
+      "parameters": [
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "The duration to wait (e.g., '5 minutes', '1 hour', '2 days')."
+        }
+      ]
+    }
+  ]
+}

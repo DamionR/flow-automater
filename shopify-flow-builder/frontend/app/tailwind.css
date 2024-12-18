@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Layout Styling */
+.page-layout {
+  @apply flex flex-col h-screen bg-white text-gray-900;
+}
+
+.header {
+  @apply flex items-center justify-between bg-blue-600 text-white p-6 shadow-md; /* Header size */
+}
+
+.search-bar {
+  @apply relative w-full max-w-6xl mx-auto mt-16 px-4;
+}
+
+.search-input {
+  @apply w-full px-8 py-4 pr-14 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.feedback-button {
+  @apply px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400;
+}
+
+/* Main Content Section */
+.content {
+  @apply flex flex-col gap-8 max-w-6xl mx-auto p-8 flex-grow overflow-hidden; /* Flex-grow and overflow-hidden to fit content */
+}
+
+/* Cards Layout */
+.results {
+  @apply mt-8 flex justify-between gap-16 flex-wrap; /* Increased gap for spacing */
+}
+
+.card {
+  @apply w-full max-w-xl bg-white p-12 rounded-md shadow-md hover:bg-gray-100 transition-colors duration-200;
+}
+
+.download-section {
+  @apply mt-6;
+}
+
+.download-button {
+  @apply inline-block mt-4 px-6 py-3 bg-green-500 text-white rounded-md font-medium hover:bg-green-400;
+}
+
+.empty-state {
+  @apply text-gray-500 italic text-center mt-8 text-lg;
+}
+
+/* Footer */
+.footer {
+  @apply bg-gray-800 text-white text-center p-6;
+}
+
+.footer p {
+  @apply text-sm;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1024px) {
+  .search-bar {
+    @apply w-full px-4;
+  }
+
+  .results {
+    @apply flex-wrap;
+  }
+
+  .card {
+    @apply w-full max-w-md;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    @apply w-full px-4;
+  }
+
+  .results {
+    @apply flex-col gap-8;
+  }
+
+  .feedback-button {
+    @apply text-sm px-4 py-2;
+  }
+
+  .card {
+    @apply w-full max-w-full;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    @apply text-sm;
+  }
+
+  .feedback-button {
+    @apply px-3 py-1;
+  }
+}

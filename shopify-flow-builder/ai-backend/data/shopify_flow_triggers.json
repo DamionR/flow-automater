@@ -1,0 +1,343 @@
+{
+  "description": "Triggers in Shopify Flow are events that start a workflow. Once a trigger is selected, you can set actions to execute immediately or conditions to determine which actions should run.",
+  "triggers": {
+    "collection": [
+      {
+        "name": "collection_created",
+        "description": "Triggered when a new collection is created in the store."
+      },
+      {
+        "name": "collection_deleted",
+        "description": "Triggered when a collection is deleted from the store."
+      }
+    ],
+    "company": [
+      {
+        "name": "company_contact_assigned_permission",
+        "description": "Triggered when a company contact is assigned a permission."
+      },
+      {
+        "name": "company_contact_created",
+        "description": "Triggered when a company contact is created."
+      },
+      {
+        "name": "company_created",
+        "description": "Triggered when a company is created."
+      },
+      {
+        "name": "company_location_created",
+        "description": "Triggered when a company location is created."
+      }
+    ],
+    "customer": [
+      {
+        "name": "customer_joined_segment",
+        "description": "Triggered when a customer joins a segment."
+      },
+      {
+        "name": "customer_abandons_checkout",
+        "description": "Triggered when a customer abandons their checkout."
+      },
+      {
+        "name": "customer_account_disabled",
+        "description": "Triggered when a customer account is disabled."
+      },
+      {
+        "name": "customer_account_enabled",
+        "description": "Triggered when a customer account is enabled."
+      },
+      {
+        "name": "customer_created",
+        "description": "Triggered when a new customer account is created."
+      },
+      {
+        "name": "customer_deleted",
+        "description": "Triggered when a customer is deleted."
+      },
+      {
+        "name": "customer_left_online_store_without_making_a_purchase",
+        "description": "Triggered when a customer leaves the online store without making a purchase."
+      },
+      {
+        "name": "customer_payment_method_created",
+        "description": "Triggered when a customer payment method is created."
+      },
+      {
+        "name": "customer_payment_method_revoked",
+        "description": "Triggered when a customer payment method is revoked."
+      },
+      {
+        "name": "customer_payment_method_updated",
+        "description": "Triggered when a customer payment method is updated."
+      },
+      {
+        "name": "customer_subscribed_to_email_marketing",
+        "description": "Triggered when a customer subscribes to email marketing."
+      },
+      {
+        "name": "customer_tags_added",
+        "description": "Triggered when tags are added to a customer."
+      },
+      {
+        "name": "customer_tags_removed",
+        "description": "Triggered when tags are removed from a customer."
+      }
+    ],
+    "draft_order": [
+      {
+        "name": "draft_order_created",
+        "description": "Triggered when a draft order is created."
+      },
+      {
+        "name": "draft_order_deleted",
+        "description": "Triggered when a draft order is deleted."
+      }
+    ],
+    "fulfillment": [
+      {
+        "name": "fulfillment_created",
+        "description": "Triggered when a fulfillment is created."
+      },
+      {
+        "name": "fulfillment_event_created",
+        "description": "Triggered when a fulfillment event is created."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_cancellation_request_accepted",
+        "description": "Triggered when a fulfillment order fulfillment cancellation request is accepted."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_cancellation_request_rejected",
+        "description": "Triggered when a fulfillment order fulfillment cancellation request is rejected."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_cancellation_request_submitted",
+        "description": "Triggered when a fulfillment order fulfillment cancellation request is submitted."
+      },
+      {
+        "name": "fulfillment_order_canceled",
+        "description": "Triggered when a fulfillment order is canceled."
+      },
+      {
+        "name": "fulfillment_order_holds_released",
+        "description": "Triggered when fulfillment order holds are released."
+      },
+      {
+        "name": "fulfillment_order_placed_on_hold",
+        "description": "Triggered when a fulfillment order is placed on hold."
+      },
+      {
+        "name": "fulfillment_order_line_items_prepared_for_local_delivery",
+        "description": "Triggered when fulfillment order line items are prepared for local delivery."
+      },
+      {
+        "name": "fulfillment_order_line_items_prepared_for_pickup",
+        "description": "Triggered when fulfillment order line items are prepared for pickup."
+      },
+      {
+        "name": "fulfillment_order_merged",
+        "description": "Triggered when a fulfillment order is merged."
+      },
+      {
+        "name": "fulfillment_order_moved",
+        "description": "Triggered when a fulfillment order is moved."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_request_accepted",
+        "description": "Triggered when a fulfillment order fulfillment request is accepted."
+      },
+      {
+        "name": "fulfillment_order_ready_to_fulfill",
+        "description": "Triggered when a fulfillment order is ready to fulfill."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_request_rejected",
+        "description": "Triggered when a fulfillment order fulfillment request is rejected."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_request_submitted",
+        "description": "Triggered when a fulfillment order fulfillment request is submitted."
+      },
+      {
+        "name": "fulfillment_order_rescheduled",
+        "description": "Triggered when a fulfillment order is rescheduled."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_service_failed_to_complete_fulfillment",
+        "description": "Triggered when a fulfillment order fulfillment service fails to complete fulfillment."
+      }
+    ],
+    "inventory": [
+      {
+        "name": "inventory_item_created",
+        "description": "Triggered when an inventory item is created."
+      },
+      {
+        "name": "inventory_item_deleted",
+        "description": "Triggered when an inventory item is deleted."
+      }
+    ],
+    "metaobject": [
+      {
+        "name": "metaobject_entry_created",
+        "description": "Triggered when a metaobject entry is created."
+      }
+    ],
+    "order": [
+      {
+        "name": "order_canceled",
+        "description": "Triggered when an order is canceled."
+      },
+      {
+        "name": "order_created",
+        "description": "Triggered when a new order is created."
+      },
+      {
+        "name": "order_deleted",
+        "description": "Triggered when an order is deleted."
+      },
+      {
+        "name": "order_fulfilled",
+        "description": "Triggered when an order is fulfilled."
+      },
+      {
+        "name": "order_paid",
+        "description": "Triggered when an order is paid."
+      },
+      {
+        "name": "order_risk_analyzed",
+        "description": "Triggered when an order's risk is analyzed."
+      },
+      {
+        "name": "order_transaction_created",
+        "description": "Triggered when an order transaction is created."
+      }
+    ],
+    "payment": [
+      {
+        "name": "payment_schedule_is_due",
+        "description": "Triggered when a payment schedule is due."
+      }
+    ],
+    "product": [
+      {
+        "name": "product_created",
+        "description": "Triggered when a new product is created."
+      },
+      {
+        "name": "product_deleted",
+        "description": "Triggered when a product is deleted."
+      },
+      {
+        "name": "product_status_updated",
+        "description": "Triggered when a product's status is updated."
+      },
+      {
+        "name": "product_variant_added",
+        "description": "Triggered when a product variant is added."
+      },
+      {
+        "name": "product_variant_deleted",
+        "description": "Triggered when a product variant is deleted."
+      },
+      {
+        "name": "product_variant_back_in_stock",
+        "description": "Triggered when a product variant is back in stock."
+      },
+      {
+        "name": "product_variant_out_of_stock",
+        "description": "Triggered when a product variant is out of stock."
+      },
+      {
+        "name": "product_variant_inventory_quantity_changed",
+        "description": "Triggered when a product variant's inventory quantity changes."
+      }
+    ],
+    "refund": [
+      {
+        "name": "refund_created",
+        "description": "Triggered when a refund is created."
+      }
+    ],
+    "return": [
+      {
+        "name": "return_approved",
+        "description": "Triggered when a return is approved."
+      },
+      {
+        "name": "return_cancelled",
+        "description": "Triggered when a return is cancelled."
+      },
+      {
+        "name": "return_closed",
+        "description": "Triggered when a return is closed."
+      },
+      {
+        "name": "return_declined",
+        "description": "Triggered when a return is declined."
+      },
+      {
+        "name": "return_reopened",
+        "description": "Triggered when a return is reopened."
+      },
+      {
+        "name": "return_requested",
+        "description": "Triggered when a return is requested."
+      }
+    ],
+    "scheduled": [
+      {
+        "name": "scheduled_time",
+        "description": "Triggered at a scheduled time."
+      }
+    ],
+    "selling_plan": [
+      {
+        "name": "selling_plan_group_created",
+        "description": "Triggered when a selling plan group is created."
+      },
+      {
+        "name": "selling_plan_group_deleted",
+        "description": "Triggered when a selling plan group is deleted."
+      },
+      {
+        "name": "selling_plan_group_updated",
+        "description": "Triggered when a selling plan group is updated."
+      }
+    ],
+    "subscription": [
+      {
+        "name": "subscription_billing_attempt_challenged",
+        "description": "Triggered when a subscription billing attempt is challenged."
+      },
+      {
+        "name": "subscription_billing_attempt_failure",
+        "description": "Triggered when a subscription billing attempt fails."
+      },
+      {
+        "name": "subscription_billing_attempt_success",
+        "description": "Triggered when a subscription billing attempt succeeds."
+      },
+      {
+        "name": "subscription_contract_created",
+        "description": "Triggered when a subscription contract is created."
+      },
+      {
+        "name": "subscription_contract_updated",
+        "description": "Triggered when a subscription contract is updated."
+      }
+    ],
+    "tender_transaction": [
+      {
+        "name": "tender_transaction_created",
+        "description": "Triggered when a tender transaction is created."
+      }
+    ],
+    "workflow": [
+      {
+        "name": "workflow_error_occurred",
+        "description": "Triggered when a workflow error occurs."
+      }
+    ]
+  }
+}

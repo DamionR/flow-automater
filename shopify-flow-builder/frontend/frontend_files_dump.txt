@@ -1,0 +1,939 @@
+
+================================================================================
+DIRECTORY: /Users/damionrashford/shopify-flow-builder/frontend/app/components
+================================================================================
+
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/Header.jsx ---
+import FeedbackButton from "./FeedbackButton";
+import SearchBar from "./SearchBar";
+
+export default function Header() {
+  return (
+    <header className="header flex justify-between items-center p-4 bg-blue-600 text-white">
+      <div className="header-left">
+        <FeedbackButton />
+      </div>
+      <div className="header-center">
+        <SearchBar />
+      </div>
+    </header>
+  );
+}
+
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/OutputSection.jsx ---
+export default function OutputSection({ data }) {
+    return (
+      <div className="output-section mt-8 p-8 flex flex-col items-center">
+        {data ? (
+          <div className="results mt-8 flex justify-between gap-20 w-full max-w-6xl">
+            <div className="description-section p-12 bg-gray-50 border border-gray-300 rounded-md flex-1 text-xl">
+              <p>{data?.explanation?.description || "No description available"}</p>
+            </div>
+
+            <div className="details-section p-12 bg-gray-50 border border-gray-300 rounded-md flex-1 text-xl">
+              <div className="space-y-8">
+                <div>
+                  <strong className="block text-xl">Trigger: </strong>
+                  <p>{data?.explanation?.trigger?.name || "No trigger available"}</p>
+                </div>
+                <div>
+                  <strong className="block text-xl">Condition: </strong>
+                  <p>{data?.explanation?.condition?.name || "No condition available"}</p>
+                </div>
+                <div>
+                  <strong className="block text-xl">Action: </strong>
+                  <p>{data?.explanation?.action?.name || "No action available"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="empty-state text-center text-gray-500 italic mt-8">
+            No workflow generated yet. Your output will appear here.
+          </p>
+        )}
+      </div>
+    );
+}
+
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/DownloadSection.jsx ---
+// DownloadSection.jsx
+export default function DownloadSection({ fileUrl }) {
+    return (
+      <div className="download-section">
+        <a href={fileUrl} download="workflow.flow" className="download-button">
+          Download Workflow (.flow)
+        </a>
+      </div>
+    );
+  }
+  
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/DescriptionSection.jsx ---
+export default function DescriptionSection({ explanation }) {
+    return (
+      <div className="description-section p-6 bg-white border border-gray-300 rounded-md shadow-md mb-6">
+        <h3 className="text-2xl font-semibold mb-4">Workflow Description</h3>
+        <p className="text-lg"><strong>Description:</strong> {explanation.description}</p>
+  
+        <h4 className="text-xl font-semibold mt-6">Trigger</h4>
+        <p><strong>Name:</strong> {explanation.trigger.name}</p>
+        <p>{explanation.trigger.details}</p>
+  
+        <h4 className="text-xl font-semibold mt-6">Condition</h4>
+        <p><strong>Name:</strong> {explanation.condition.name}</p>
+        <p>{explanation.condition.details}</p>
+  
+        <h4 className="text-xl font-semibold mt-6">Action</h4>
+        <p><strong>Name:</strong> {explanation.action.name}</p>
+        <p>{explanation.action.details}</p>
+      </div>
+    );
+  }
+  
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/FeedbackButton.jsx ---
+export default function FeedbackButton() {
+    return (
+      <button className="feedback-button text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">
+        Leave Feedback
+      </button>
+    );
+  }
+  
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/SearchBar.jsx ---
+import { useState } from "react";
+import { Search } from 'lucide-react';
+
+export default function SearchBar({ onSearch }) {
+  const [input, setInput] = useState("");
+  const [useDirectAI, setUseDirectAI] = useState(false); // Option to toggle between routes
+
+  const handleSearch = async () => {
+    const url = useDirectAI ? "http://localhost:5001/direct-ai" : "http://localhost:5001/generate-flow";
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          description: input, // Send the user input as 'description'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const aiResponse = data.aiResponse || "No AI response"; // Get the AI response from backend
+        console.log(aiResponse); // Logs the AI response
+        onSearch({ aiResponse }); // Pass the result to the parent (OutputSection)
+      } else {
+        console.error("Error:", data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+    }
+  };
+
+  return (
+    <div className="search-bar relative w-full max-w-6xl mx-auto mt-16">
+      {/* Search Input Section */}
+      <div className="relative">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()} // Trigger search on Enter key
+          placeholder="Describe your workflow..."
+          className="w-full px-12 py-6 pr-16 text-2xl border border-gray-300 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+          <Search 
+            className="h-8 w-8 text-gray-400 cursor-pointer" 
+            onClick={handleSearch} // Add onClick
+          />
+        </div>
+      </div>
+
+      {/* Toggle for Direct AI option */}
+      <div className="mt-4">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={useDirectAI}
+            onChange={(e) => setUseDirectAI(e.target.checked)}
+            className="form-checkbox h-5 w-5 text-blue-500"
+          />
+          <span className="text-xl">Use Direct AI</span>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/PageLayout.jsx ---
+import { useState } from "react";
+import FeedbackButton from "./FeedbackButton";
+import SearchBar from "./SearchBar";
+import OutputSection from "./OutputSection"; // Import OutputSection
+
+export default function PageLayout({ children }) {
+  const [searchQuery, setSearchQuery] = useState(null);  // Store response here
+
+  const handleSearch = (data) => {
+    setSearchQuery(data);  // Update the state with the response
+    console.log("Search query data: ", data); // Log the data to see if it's correct
+  };
+
+  return (
+    <div className="page-layout flex flex-col h-screen bg-gray-50">
+      <header className="header flex justify-between items-center px-8 py-6 bg-blue-600 text-white">
+        <div className="text-2xl font-bold text-gray-900">Shopify Flow Builder</div>
+        <FeedbackButton />
+      </header>
+
+      <main className="content flex-1 p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+          <OutputSection data={searchQuery} /> {/* Pass the response to OutputSection */}
+        </div>
+      </main>
+
+      <footer className="footer p-6 bg-gray-800 text-white text-center">
+        <p>&copy; 2024 Shopify Flow Builder</p>
+      </footer>
+    </div>
+  );
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/DescriptionSection.jsx
+================================================================================
+export default function DescriptionSection({ explanation }) {
+    return (
+      <div className="description-section p-6 bg-white border border-gray-300 rounded-md shadow-md mb-6">
+        <h3 className="text-2xl font-semibold mb-4">Workflow Description</h3>
+        <p className="text-lg"><strong>Description:</strong> {explanation.description}</p>
+  
+        <h4 className="text-xl font-semibold mt-6">Trigger</h4>
+        <p><strong>Name:</strong> {explanation.trigger.name}</p>
+        <p>{explanation.trigger.details}</p>
+  
+        <h4 className="text-xl font-semibold mt-6">Condition</h4>
+        <p><strong>Name:</strong> {explanation.condition.name}</p>
+        <p>{explanation.condition.details}</p>
+  
+        <h4 className="text-xl font-semibold mt-6">Action</h4>
+        <p><strong>Name:</strong> {explanation.action.name}</p>
+        <p>{explanation.action.details}</p>
+      </div>
+    );
+  }
+  
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/DownloadSection.jsx
+================================================================================
+// DownloadSection.jsx
+export default function DownloadSection({ fileUrl }) {
+    return (
+      <div className="download-section">
+        <a href={fileUrl} download="workflow.flow" className="download-button">
+          Download Workflow (.flow)
+        </a>
+      </div>
+    );
+  }
+  
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/FeedbackButton.jsx
+================================================================================
+export default function FeedbackButton() {
+    return (
+      <button className="feedback-button text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">
+        Leave Feedback
+      </button>
+    );
+  }
+  
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/Header.jsx
+================================================================================
+import FeedbackButton from "./FeedbackButton";
+import SearchBar from "./SearchBar";
+
+export default function Header() {
+  return (
+    <header className="header flex justify-between items-center p-4 bg-blue-600 text-white">
+      <div className="header-left">
+        <FeedbackButton />
+      </div>
+      <div className="header-center">
+        <SearchBar />
+      </div>
+    </header>
+  );
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/OutputSection.jsx
+================================================================================
+export default function OutputSection({ data }) {
+    return (
+      <div className="output-section mt-8 p-8 flex flex-col items-center">
+        {data ? (
+          <div className="results mt-8 flex justify-between gap-20 w-full max-w-6xl">
+            <div className="description-section p-12 bg-gray-50 border border-gray-300 rounded-md flex-1 text-xl">
+              <p>{data?.explanation?.description || "No description available"}</p>
+            </div>
+
+            <div className="details-section p-12 bg-gray-50 border border-gray-300 rounded-md flex-1 text-xl">
+              <div className="space-y-8">
+                <div>
+                  <strong className="block text-xl">Trigger: </strong>
+                  <p>{data?.explanation?.trigger?.name || "No trigger available"}</p>
+                </div>
+                <div>
+                  <strong className="block text-xl">Condition: </strong>
+                  <p>{data?.explanation?.condition?.name || "No condition available"}</p>
+                </div>
+                <div>
+                  <strong className="block text-xl">Action: </strong>
+                  <p>{data?.explanation?.action?.name || "No action available"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="empty-state text-center text-gray-500 italic mt-8">
+            No workflow generated yet. Your output will appear here.
+          </p>
+        )}
+      </div>
+    );
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/PageLayout.jsx
+================================================================================
+import { useState } from "react";
+import FeedbackButton from "./FeedbackButton";
+import SearchBar from "./SearchBar";
+import OutputSection from "./OutputSection"; // Import OutputSection
+
+export default function PageLayout({ children }) {
+  const [searchQuery, setSearchQuery] = useState(null);  // Store response here
+
+  const handleSearch = (data) => {
+    setSearchQuery(data);  // Update the state with the response
+    console.log("Search query data: ", data); // Log the data to see if it's correct
+  };
+
+  return (
+    <div className="page-layout flex flex-col h-screen bg-gray-50">
+      <header className="header flex justify-between items-center px-8 py-6 bg-blue-600 text-white">
+        <div className="text-2xl font-bold text-gray-900">Shopify Flow Builder</div>
+        <FeedbackButton />
+      </header>
+
+      <main className="content flex-1 p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+          <OutputSection data={searchQuery} /> {/* Pass the response to OutputSection */}
+        </div>
+      </main>
+
+      <footer className="footer p-6 bg-gray-800 text-white text-center">
+        <p>&copy; 2024 Shopify Flow Builder</p>
+      </footer>
+    </div>
+  );
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/components/SearchBar.jsx
+================================================================================
+import { useState } from "react";
+import { Search } from 'lucide-react';
+
+export default function SearchBar({ onSearch }) {
+  const [input, setInput] = useState("");
+  const [useDirectAI, setUseDirectAI] = useState(false); // Option to toggle between routes
+
+  const handleSearch = async () => {
+    const url = useDirectAI ? "http://localhost:5001/direct-ai" : "http://localhost:5001/generate-flow";
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          description: input, // Send the user input as 'description'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const aiResponse = data.aiResponse || "No AI response"; // Get the AI response from backend
+        console.log(aiResponse); // Logs the AI response
+        onSearch({ aiResponse }); // Pass the result to the parent (OutputSection)
+      } else {
+        console.error("Error:", data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+    }
+  };
+
+  return (
+    <div className="search-bar relative w-full max-w-6xl mx-auto mt-16">
+      {/* Search Input Section */}
+      <div className="relative">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()} // Trigger search on Enter key
+          placeholder="Describe your workflow..."
+          className="w-full px-12 py-6 pr-16 text-2xl border border-gray-300 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+          <Search 
+            className="h-8 w-8 text-gray-400 cursor-pointer" 
+            onClick={handleSearch} // Add onClick
+          />
+        </div>
+      </div>
+
+      {/* Toggle for Direct AI option */}
+      <div className="mt-4">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={useDirectAI}
+            onChange={(e) => setUseDirectAI(e.target.checked)}
+            className="form-checkbox h-5 w-5 text-blue-500"
+          />
+          <span className="text-xl">Use Direct AI</span>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+================================================================================
+DIRECTORY: /Users/damionrashford/shopify-flow-builder/frontend/app/routes
+================================================================================
+
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/routes/_index.jsx ---
+import { useState } from "react";
+import OutputSection from "~/components/OutputSection";
+import PageLayout from "~/components/PageLayout";
+import { generateWorkflow } from "~/utils/api"; 
+
+export default function IndexRoute() {
+  const [generatedData, setGeneratedData] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const handleSearch = async (query) => {
+    try {
+      const data = await generateWorkflow(query); // API call to generate workflow based on query
+      setGeneratedData(data);
+    } catch (err) {
+      console.error("Failed to generate workflow:", err);
+    }
+  };
+
+  const togglePreview = () => {
+    setShowPreview(!showPreview);
+  };
+
+  return (
+    <PageLayout onSearch={handleSearch}> 
+      <div className="content">
+        <OutputSection data={generatedData} onPreview={togglePreview} /> 
+        {showPreview && (
+          <div className="workflow-preview">
+            <p>Workflow preview content</p>
+          </div>
+        )}
+      </div>
+    </PageLayout>
+  );
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/routes/_index.jsx
+================================================================================
+import { useState } from "react";
+import OutputSection from "~/components/OutputSection";
+import PageLayout from "~/components/PageLayout";
+import { generateWorkflow } from "~/utils/api"; 
+
+export default function IndexRoute() {
+  const [generatedData, setGeneratedData] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const handleSearch = async (query) => {
+    try {
+      const data = await generateWorkflow(query); // API call to generate workflow based on query
+      setGeneratedData(data);
+    } catch (err) {
+      console.error("Failed to generate workflow:", err);
+    }
+  };
+
+  const togglePreview = () => {
+    setShowPreview(!showPreview);
+  };
+
+  return (
+    <PageLayout onSearch={handleSearch}> 
+      <div className="content">
+        <OutputSection data={generatedData} onPreview={togglePreview} /> 
+        {showPreview && (
+          <div className="workflow-preview">
+            <p>Workflow preview content</p>
+          </div>
+        )}
+      </div>
+    </PageLayout>
+  );
+}
+
+================================================================================
+DIRECTORY: /Users/damionrashford/shopify-flow-builder/frontend/app/utils
+================================================================================
+
+--- FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/utils/api.js ---
+export const generateWorkflow = async (description) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/generate-flow`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ description }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate workflow");
+      }
+  
+      return await response.json();  // Ensure you're returning all data
+    } catch (error) {
+      console.error("Error generating workflow:", error);
+      throw new Error(error.message || "Failed to generate workflow");
+    }
+};
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/utils/api.js
+================================================================================
+export const generateWorkflow = async (description) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/generate-flow`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ description }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate workflow");
+      }
+  
+      return await response.json();  // Ensure you're returning all data
+    } catch (error) {
+      console.error("Error generating workflow:", error);
+      throw new Error(error.message || "Failed to generate workflow");
+    }
+};
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/root.jsx
+================================================================================
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import "./tailwind.css";
+
+export default function Root() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/app/tailwind.css
+================================================================================
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Layout Styling */
+.page-layout {
+  @apply flex flex-col h-screen bg-white text-gray-900;
+}
+
+.header {
+  @apply flex items-center justify-between bg-blue-600 text-white p-6 shadow-md; /* Header size */
+}
+
+.search-bar {
+  @apply relative w-full max-w-6xl mx-auto mt-16 px-4;
+}
+
+.search-input {
+  @apply w-full px-8 py-4 pr-14 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.feedback-button {
+  @apply px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400;
+}
+
+/* Main Content Section */
+.content {
+  @apply flex flex-col gap-8 max-w-6xl mx-auto p-8 flex-grow overflow-hidden; /* Flex-grow and overflow-hidden to fit content */
+}
+
+/* Cards Layout */
+.results {
+  @apply mt-8 flex justify-between gap-16 flex-wrap; /* Increased gap for spacing */
+}
+
+.card {
+  @apply w-full max-w-xl bg-white p-12 rounded-md shadow-md hover:bg-gray-100 transition-colors duration-200;
+}
+
+.download-section {
+  @apply mt-6;
+}
+
+.download-button {
+  @apply inline-block mt-4 px-6 py-3 bg-green-500 text-white rounded-md font-medium hover:bg-green-400;
+}
+
+.empty-state {
+  @apply text-gray-500 italic text-center mt-8 text-lg;
+}
+
+/* Footer */
+.footer {
+  @apply bg-gray-800 text-white text-center p-6;
+}
+
+.footer p {
+  @apply text-sm;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1024px) {
+  .search-bar {
+    @apply w-full px-4;
+  }
+
+  .results {
+    @apply flex-wrap;
+  }
+
+  .card {
+    @apply w-full max-w-md;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    @apply w-full px-4;
+  }
+
+  .results {
+    @apply flex-col gap-8;
+  }
+
+  .feedback-button {
+    @apply text-sm px-4 py-2;
+  }
+
+  .card {
+    @apply w-full max-w-full;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    @apply text-sm;
+  }
+
+  .feedback-button {
+    @apply px-3 py-1;
+  }
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/public/index.html
+================================================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shopify Flow Builder application for generating automated workflows.">
+  <title>Shopify Flow Builder</title>
+  <link rel="icon" href="/vite.svg" type="image/svg+xml">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #root {
+      width: 100%;
+      height: 100%;
+    }
+    .loading {
+      font-size: 1.5rem;
+      color: #646cff;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+  </div>
+  <script type="module" src="/src/index.jsx"></script>
+</body>
+</html>
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/.env
+================================================================================
+# Backend API Base URL
+VITE_API_BASE_URL=http://127.0.0.1:5001
+
+# Environment
+VITE_ENV=development
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/eslint.config.js
+================================================================================
+import js from '@eslint/js'
+import globals from 'globals'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+
+export default [
+  { ignores: ['dist'] },
+  {
+    files: ['**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    settings: { react: { version: '18.3' } },
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
+      ...reactHooks.configs.recommended.rules,
+      'react/jsx-no-target-blank': 'off',
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  },
+]
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/package.json
+================================================================================
+{
+  "name": "shopify-flow-builder",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "start": "remix-serve ./build/server/index.js",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@remix-run/node": "^2.15.1",
+    "@remix-run/react": "^2.15.1",
+    "@remix-run/serve": "^2.15.1",
+    "isbot": "^4.1.0",
+    "lucide-react": "^0.468.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.15.1",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.38.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.1.6",
+    "vite": "^5.1.0",
+    "vite-tsconfig-paths": "^4.2.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/postcss.config.js
+================================================================================
+export default {
+  plugins: {
+    tailwindcss: {}, // Load Tailwind CSS
+    autoprefixer: {}, // Add vendor prefixes automatically
+  },
+};
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/tailwind.config.js
+================================================================================
+export default {
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}", // Include all app files
+    "./public/**/*.html", // Include public HTML files
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: [
+          "Inter",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji",
+        ],
+      },
+    },
+  },
+  plugins: [],
+};
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/tsconfig.json
+================================================================================
+{
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/.server/**/*.ts",
+    "**/.server/**/*.tsx",
+    "**/.client/**/*.ts",
+    "**/.client/**/*.tsx"
+, "vite.config.js", "app/routes/_index.jsx", "app/root.jsx", "tailwind.config.js"  ],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "types": ["@remix-run/node", "vite/client"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "strict": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./app/*"]
+    },
+
+    // Vite takes care of building everything, not tsc.
+    "noEmit": true
+  }
+}
+
+================================================================================
+FILE: /Users/damionrashford/shopify-flow-builder/frontend/vite.config.js
+================================================================================
+import { vitePlugin as remix } from "@remix-run/dev";
+import { defineConfig } from "vite";
+import { EventEmitter } from "events";
+
+EventEmitter.defaultMaxListeners = 20;
+
+export default defineConfig({
+  plugins: [
+    remix({
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+        v3_singleFetch: true,
+        v3_lazyRouteDiscovery: true,
+      },
+    }),
+  ],
+  resolve: {
+    alias: {
+      "~": "/app",
+    },
+  },
+  define: {
+    "process.env": {}, // Add this to avoid the "process is not defined" error
+  },
+});

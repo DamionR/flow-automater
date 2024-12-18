@@ -1,0 +1,193 @@
+{
+  "description": "Conditions in Shopify Flow are used to control the path of a workflow by evaluating specific data points in your store. When creating a condition, you select a data field, apply a logical operator, and check against a predefined value. These conditions help automate tasks such as determining order status, customer eligibility, and product availability based on various criteria. Conditions can be static or dynamic and can include multiple logical operators to define complex workflows.",
+  "conditions": [
+    {
+      "name": "order_total_greater_than",
+      "description": "Checks if the total price of an order is greater than a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "greater_than",
+      "value_type": "number"
+    },
+    {
+      "name": "order_total_greater_than_or_equal_to",
+      "description": "Checks if the total price of an order is greater than or equal to a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "greater_than_or_equal_to",
+      "value_type": "number"
+    },
+    {
+      "name": "order_total_less_than",
+      "description": "Checks if the total price of an order is less than a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "less_than",
+      "value_type": "number"
+    },
+    {
+      "name": "order_total_less_than_or_equal_to",
+      "description": "Checks if the total price of an order is less than or equal to a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "less_than_or_equal_to",
+      "value_type": "number"
+    },
+    {
+      "name": "customer_accepts_marketing",
+      "description": "Checks if the customer has agreed to receive marketing emails.",
+      "data_field": "customer.acceptsMarketing",
+      "logical_operator": "equal_to",
+      "value_type": "boolean"
+    },
+    {
+      "name": "customer_does_not_accept_marketing",
+      "description": "Checks if the customer has not agreed to receive marketing emails.",
+      "data_field": "customer.acceptsMarketing",
+      "logical_operator": "not_equal_to",
+      "value_type": "boolean"
+    },
+    {
+      "name": "order_contains_product_with_tag",
+      "description": "Checks if the order contains at least one product with a specific tag.",
+      "data_field": "order.lineItems.product.tags",
+      "logical_operator": "at_least_one_of",
+      "value_type": "string",
+      "list_operator": "at_least_one_of"
+    },
+    {
+      "name": "order_does_not_contain_product_with_tag",
+      "description": "Checks if the order does not contain any product with a specific tag.",
+      "data_field": "order.lineItems.product.tags",
+      "logical_operator": "not_any_of",
+      "value_type": "string",
+      "list_operator": "none_of"
+    },
+    {
+      "name": "order_shipping_country_is",
+      "description": "Checks if the order's shipping country matches a specific country.",
+      "data_field": "order.shippingAddress.country",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_shipping_country_is_not",
+      "description": "Checks if the order's shipping country does not match a specific country.",
+      "data_field": "order.shippingAddress.country",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_title_is",
+      "description": "Checks if the product title matches a specific value.",
+      "data_field": "product.title",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_title_is_not",
+      "description": "Checks if the product title does not match a specific value.",
+      "data_field": "product.title",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_vendor_is",
+      "description": "Checks if the product vendor matches a specific value.",
+      "data_field": "product.vendor",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_vendor_is_not",
+      "description": "Checks if the product vendor does not match a specific value.",
+      "data_field": "product.vendor",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "customer_has_tag",
+      "description": "Checks if the customer has a specific tag.",
+      "data_field": "customer.tags",
+      "logical_operator": "at_least_one_of",
+      "value_type": "string",
+      "list_operator": "at_least_one_of"
+    },
+    {
+      "name": "customer_does_not_have_tag",
+      "description": "Checks if the customer does not have a specific tag.",
+      "data_field": "customer.tags",
+      "logical_operator": "not_any_of",
+      "value_type": "string",
+      "list_operator": "none_of"
+    },
+    {
+      "name": "order_billing_city_is",
+      "description": "Checks if the order's billing city matches a specific value.",
+      "data_field": "order.billingAddress.city",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_billing_city_is_not",
+      "description": "Checks if the order's billing city does not match a specific value.",
+      "data_field": "order.billingAddress.city",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_billing_province_is",
+      "description": "Checks if the order's billing province matches a specific value.",
+      "data_field": "order.billingAddress.province",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_billing_province_is_not",
+      "description": "Checks if the order's billing province does not match a specific value.",
+      "data_field": "order.billingAddress.province",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_financial_status_is",
+      "description": "Checks if the order's financial status matches a specific value (e.g., 'paid', 'pending', 'refunded').",
+      "data_field": "order.financialStatus",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_financial_status_is_not",
+      "description": "Checks if the order's financial status does not match a specific value.",
+      "data_field": "order.financialStatus",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_fulfillment_status_is",
+      "description": "Checks if the order's fulfillment status matches a specific value (e.g., 'fulfilled', 'partial', 'unfulfilled').",
+      "data_field": "order.fulfillmentStatus",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_fulfillment_status_is_not",
+      "description": "Checks if the order's fulfillment status does not match a specific value.",
+      "data_field": "order.fulfillmentStatus",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_tags_include",
+      "description": "Checks if the order's tags include a specific tag.",
+      "data_field": "order.tags",
+      "logical_operator": "at_least_one_of",
+      "value_type": "string",
+      "list_operator": "at_least_one_of"
+    },
+    {
+      "name": "order_tags_do_not_include",
+      "description": "Checks if the order's tags do not include a specific tag.",
+      "data_field": "order.tags",
+      "logical_operator": "not_any_of",
+      "value_type": "string",
+      "list_operator": "none_of"
+    }
+  ]
+}

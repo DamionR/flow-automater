@@ -1,0 +1,141 @@
+{
+  "description": "Liquid variables in Shopify Flow are placeholders that dynamically populate with values when a workflow runs. These variables represent attributes of resources such as customers, orders, products, and more. Liquid is used to manipulate data and create dynamic content within workflows. The variables help you reference the attributes of resources involved in the workflow, providing flexibility and control over the execution and output of the workflow.",
+
+  "liquid_variables": {
+    "order": [
+      {
+        "name": "order.name",
+        "description": "The name of the order (e.g., #1001).",
+        "type": "string",
+        "example": "#1001"
+      },
+      {
+        "name": "order.totalPriceSet.shopMoney.amount",
+        "description": "The total price of the order in the shop's currency.",
+        "type": "number",
+        "example": "763.42"
+      },
+      {
+        "name": "order.customer.firstName",
+        "description": "The customer's first name.",
+        "type": "string",
+        "example": "Jeanne"
+      },
+      {
+        "name": "order.customer.lastName",
+        "description": "The customer's last name.",
+        "type": "string",
+        "example": "Dupont"
+      },
+      {
+        "name": "order.customer.email",
+        "description": "The customer's email address.",
+        "type": "string",
+        "example": "jeanne@example.com"
+      }
+    ],
+    "customer": [
+      {
+        "name": "customer.firstName",
+        "description": "The customer's first name.",
+        "type": "string",
+        "example": "Jeanne"
+      },
+      {
+        "name": "customer.lastName",
+        "description": "The customer's last name.",
+        "type": "string",
+        "example": "Dupont"
+      },
+      {
+        "name": "customer.email",
+        "description": "The customer's email address.",
+        "type": "string",
+        "example": "jeanne@example.com"
+      }
+    ],
+    "product": [
+      {
+        "name": "product.title",
+        "description": "The title of the product.",
+        "type": "string",
+        "example": "High Waist Leggings - Black"
+      },
+      {
+        "name": "product.tags",
+        "description": "A list of tags associated with the product.",
+        "type": "list",
+        "example": "[\"color:red\", \"color:orange\"]"
+      }
+    ],
+    "shop": [
+      {
+        "name": "shop.myShopifyDomain",
+        "description": "The shop's myshopify domain (e.g., your-store.myshopify.com).",
+        "type": "string",
+        "example": "your-store.myshopify.com"
+      }
+    ],
+    "productVariant": [
+      {
+        "name": "productVariant.legacyResourceId",
+        "description": "The product variant's legacy resource ID.",
+        "type": "string",
+        "example": "1234567890"
+      }
+    ]
+  },
+
+  "liquid_tags": [
+    "if",
+    "unless",
+    "elsif",
+    "else",
+    "case",
+    "when",
+    "for",
+    "cycle",
+    "tablerow"
+  ],
+
+  "liquid_filters": [
+    "size",
+    "remove",
+    "remove_first",
+    "strip",
+    "replace",
+    "date_minus",
+    "date_plus"
+  ],
+
+  "examples": [
+    {
+      "description": "Output URLs for resources",
+      "example": "# Output the base Admin URL for your store\nhttps://admin.shopify.com/store/{{ shop.myShopifyDomain | replace: \".myshopify.com\", \"\" }}\n\n# Customer from an Order trigger:\n{{ base_url }}/customers/{{ order.customer.legacyResourceId }}"
+    },
+    {
+      "description": "Convert a list of tags to a metafield",
+      "example": "{% capture mf_value %}\n{%- for tags_item in product.tags -%}\n{%- if tags_item contains \"color:\" -%}\n\"{{- tags_item | remove_first: \"color:\" | strip -}}\",\n{%- endif -%}\n{%- endfor -%}\n{% endcapture -%}\n[{{mf_value | remove_last: \",\"}}]"
+    },
+    {
+      "description": "Write a dynamic email message for an order",
+      "example": "Please send a personal thank you note to {{ order.customer.firstName }} {{ order.customer.lastName }}({{ order.customer.email }}) for placing an order for $ {{ order.totalPriceSet.shopMoney.amount }}."
+    }
+  ],
+
+  "complex_data_objects": {
+    "lineItems": [
+      {
+        "contract": {
+          "id": "{{ li.contract.id | json }}"
+        },
+        "customAttributes": [
+          {
+            "key": "{{ ca.key | json }}",
+            "value": "{{ ca.value | json }}"
+          }
+        ]
+      }
+    ]
+  }
+}

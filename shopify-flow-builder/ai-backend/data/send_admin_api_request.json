@@ -1,0 +1,97 @@
+{
+    "description": "The Send Admin API request action sends a mutation to the Shopify GraphQL Admin API. By doing so, you can do almost any action the API allows using Flow.",
+    "action": {
+      "name": "Send Admin API request",
+      "fields": [
+        {
+          "name": "Mutation",
+          "description": "Required. The Shopify GraphQL Admin mutation that you want to call. A mutation is an API that takes action or updates data."
+        },
+        {
+          "name": "Mutation inputs",
+          "description": "Required. The data (in JSON) that you need to send as part of your mutation request. Each mutation requires a different set of data, which is documented in the link provided for each mutation. To construct the necessary JSON, you can use Liquid or a Run code action."
+        }
+      ],
+      "triggers": "The Send Admin API request action can be used in any workflow, with any trigger, as long as the workflow provides the data necessary to construct the mutation inputs.",
+      "examples": [
+        {
+          "name": "Example 1: Update the template used for a product",
+          "description": "Use the Send Admin API request action to call the productUpdate mutation to update the template used for a product. The id field is required and must be a valid product GID. This example assumes that your workflow has a trigger that provides a product object.",
+          "input": {
+            "templateSuffix": "pre-order",
+            "id": "{{product.id}}"
+          }
+        },
+        {
+          "name": "Example 2: Update a customer's tax exemption status",
+          "description": "Use the Send Admin API request action to call the customerUpdate mutation to update a customer's tax exemption status. The id field is required and must be a valid customer GID. This example assumes that your workflow has a trigger that provides an order object.",
+          "input": {
+            "id": "{{order.customer.id}}",
+            "taxExempt": true
+          }
+        },
+        {
+          "name": "Example 3: Update a customer's locale",
+          "description": "Use the Send Admin API request action to call the customerUpdate mutation to update a customer's locale. The id field is required and must be a valid customer GID. This example assumes that your workflow has a trigger that provides a customer object.",
+          "input": {
+            "id": "{{customer.id}}",
+            "locale": "en"
+          }
+        }
+      ],
+      "liquid_tips": [
+        {
+          "tip": "Working with strings",
+          "description": "Use the json filter to escape the string and ensure proper JSON formatting. This example updates the note on a customer.",
+          "input": "{% assign revisedNote = customer.note | append: \" Hello from Flow!\" %}\n{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"note\": {{ revisedNote | json }}\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"note\": \"Had a \\\"great experience\\\" with their latest order. Hello from Flow!\"\n  }\n}"
+        },
+        {
+          "tip": "Working with arrays",
+          "description": "Use the json filter to transform a liquid array into a JSON array. This example outputs a JSON array when provided with a liquid array.",
+          "input": "{% assign tags = \"tag1,tag2,tag3\" | split: \",\" %}\n{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"tags\": {{ tags | json }}\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"tags\": [\"tag1\", \"tag2\", \"tag3\"]\n  }\n}"
+        },
+        {
+          "tip": "For loop example",
+          "description": "Use a loop to output elements of an array, separated by commas.",
+          "input": "{% assign tags = \"tag1,tag2,tag3\" | split: \",\" %}\n{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"tags\": [\n      {% for tag in tags %}\n        \"{{ tag }}\"{% unless forloop.last %},{% endunless %}\n      {% endfor %}\n    ]\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"tags\": [\"tag1\", \"tag2\", \"tag3\"]\n  }\n}"
+        },
+        {
+          "tip": "Map example",
+          "description": "The map filter can be used to get an array of a specific property from an array of objects.",
+          "input": "{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"tags\": {{ customer.addresses | map: \"city\" | json }}\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"tags\": [\"Ottawa\", \"Toronto\"]\n  }\n}"
+        }
+      ],
+      "limitations": [
+        "The action will display a list of Mutations and Mutation inputs from Shopify Admin API version 2024-04.",
+        "When the Admin API version is upgraded, this action can fail if relying on a field with a breaking change.",
+        "The action doesn't support GraphQL queries, only mutations.",
+        "The action doesn't support mutations that have been deprecated.",
+        "The action doesn't support some mutations that are specific to certain apps, including some subscription, marketing activity, and discount mutations.",
+        "The action doesn't support asynchronous mutations or mutations that return a Job type.",
+        "The action doesn't support mutations that do not implement the Node interface."
+      ],
+      "templates": [
+        {
+          "name": "Add free (discounted 100%) item to new orders",
+          "description": "Adds a free, discounted item to new orders if the item is in stock. This automation enhances customer satisfaction by including a surprise free item in their order, promotes new or less-known products, or streamlines promotions."
+        },
+        {
+          "name": "Allow ordering for companies created by company account requests",
+          "description": "Assign an ordering permission when a company is created by a company account request."
+        },
+        {
+          "name": "Change product template when variants are out of stock or back in stock",
+          "description": "Updates the product template based on the inventory for the product's variants. The workflow switches templates between in-stock, out-of-stock, and when one or more variants are out of stock."
+        },
+        {
+          "name": "Fulfill any digital items in an order",
+          "description": "Fulfills any items that have no physical delivery required, such as digital items, or that match a list of SKUs. Runs once for each fulfillment location for a new order."
+        }
+      ]
+    }
+  }
+  

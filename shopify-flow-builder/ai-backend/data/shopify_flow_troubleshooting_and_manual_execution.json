@@ -1,0 +1,176 @@
+{
+    "workflow_troubleshooting": {
+      "overview": {
+        "description": "This section outlines troubleshooting strategies for Shopify Flow workflows, including retrying workflows, manually running workflows, and handling errors during execution."
+      },
+      "retrying_workflows": {
+        "considerations": {
+          "workflow_running": "A workflow cannot still be running or waiting. It must either be successful or have errors before retrying.",
+          "workflow_active": "The associated workflow must be active. If inactive, navigate to the workflow summary page and click 'Turn on'.",
+          "trigger_match": "The workflow trigger must match the trigger used by the original run. If the trigger is changed, retrying will not be possible.",
+          "trigger_data": "Retrying will use the same trigger data as the original run (e.g., resource ID).",
+          "up_to_date_data": "Retrying will fetch the latest data from 'Get data' actions, ensuring the conditions and actions use up-to-date data."
+        },
+        "steps": {
+          "retry_from_run_details": {
+            "description": "Retry a workflow run by navigating to the Run details page and following the retry prompts.",
+            "steps": [
+              "Click the link in your workflow error notification or navigate to the run in the Flow app.",
+              "Troubleshoot the run to identify any issues and check the workflow configuration.",
+              "Fix the identified issues in the workflow and resources.",
+              "Return to the Run details page and click 'Retry run'."
+            ]
+          },
+          "retry_from_workflow_summary": {
+            "description": "Retry multiple workflow runs from the Workflow summary page.",
+            "steps": [
+              "Select a workflow from the list to navigate to the summary page.",
+              "View the details of runs to determine the issue that needs fixing.",
+              "Fix the issue in the workflow and related resources.",
+              "Select all impacted runs and click 'Retry runs' from the action menu."
+            ]
+          },
+          "view_retry_status": {
+            "description": "View the status of retries from the Run details or Workflow summary pages.",
+            "steps": [
+              "Check the Retries column to see if a run has been retried.",
+              "Click the retry icon to filter the list of original runs and retries."
+            ]
+          }
+        }
+      },
+      "manual_workflow_execution": {
+        "overview": {
+          "description": "Running workflows manually in Shopify Flow can be helpful for troubleshooting, creating workflows, and processing resources in bulk. It allows workflows to be run even if the event triggering the workflow has already passed."
+        },
+        "considerations": {
+          "workflow_active": "The workflow must be active to run it manually. Inactive workflows must be activated first.",
+          "trigger_match": "The workflow trigger must match the resource type you're working with (e.g., 'Order created' for orders).",
+          "flow_app_installed": "The Shopify Flow app must be installed in your store to run workflows manually."
+        },
+        "steps": {
+          "run_workflow_from_admin": {
+            "description": "Manually run a workflow from the Shopify admin on an individual resource.",
+            "steps": [
+              "From Shopify Admin, go to the relevant resource (e.g., Orders, Draft orders, Products, Customers).",
+              "Click the resource to run the workflow on.",
+              "Click 'More actions' and select 'Run Flow automation'.",
+              "In the Automate with Flow page, select the workflow to run.",
+              "Click 'Run workflow' and optionally click 'View results in Flow' to review the outcome."
+            ]
+          },
+          "run_workflow_with_bulk_action": {
+            "description": "Manually run a workflow on multiple resources at once using a bulk action.",
+            "steps": [
+              "From Shopify Admin, go to the relevant resource page.",
+              "Select the resources to apply the workflow to (up to 50 by default).",
+              "Click the '...' button and select 'Run Flow automation'.",
+              "In the Automate with Flow page, select the workflow to run.",
+              "Click 'Run workflow' and optionally click 'View results in Flow' to review the outcome."
+            ],
+            "bulk_action_considerations": {
+              "limit_50": "By default, the bulk action supports a maximum of 50 resources. To increase the limit to 250, append ?limit=250 to the page URL.",
+              "filter_results": "You can combine ?limit=250 with filters like '&product_type=example' to refine the list of resources."
+            }
+          }
+        }
+      },
+      "bulk_actions": {
+        "overview": {
+          "description": "Bulk actions allow you to perform tasks on multiple items simultaneously in Shopify Admin, such as fulfilling orders, deleting files, and publishing products."
+        },
+        "select_items_to_edit_in_bulk": {
+          "steps": [
+            "Click Orders, Products, Customers, or Discounts in Shopify Admin.",
+            "Select items one by one or in a range using the shift key, or select all items on a page by clicking the checkbox at the top of the list.",
+            "For bulk editing, click 'Select all in this store' to select all items across your store."
+          ]
+        },
+        "choose_bulk_action": {
+          "steps": [
+            "Select the list items you want to perform a bulk action on.",
+            "Click the bulk action name and complete the necessary steps.",
+            "For deletions, confirm your choice by clicking 'Delete'."
+          ]
+        },
+        "list_of_bulk_actions": {
+          "description": "Here are some of the available bulk actions in Shopify Admin for different resource pages.",
+          "actions": {
+            "orders": [
+              "Create and edit shipping labels",
+              "Fulfill orders",
+              "Capture order payments",
+              "Print packing slips",
+              "Archive orders",
+              "Unarchive orders",
+              "Add/remove tags",
+              "Run automated workflows (requires Shopify Flow)"
+            ],
+            "products": [
+              "Make products available/unavailable",
+              "Delete selected products",
+              "Add/remove tags",
+              "Add/remove collections",
+              "Run automated workflows (requires Shopify Flow)"
+            ],
+            "customers": [
+              "Delete selected customers",
+              "Add/remove tags",
+              "Run automated workflows (requires Shopify Flow)"
+            ],
+            "discounts": [
+              "Activate/deactivate discounts",
+              "Delete discounts"
+            ]
+          }
+        }
+      },
+      "workflow_monitoring": {
+        "overview": {
+          "description": "After running a workflow, you can monitor its performance and review any issues using various monitoring tools within the Shopify Flow app."
+        },
+        "steps": {
+          "view_recent_runs": {
+            "description": "View all workflow runs from Shopify Admin > Apps > Flow, or open a specific workflow to review its runs.",
+            "steps": [
+              "Click 'Recent runs' to view all workflow runs.",
+              "Click a run to view the details of its execution."
+            ]
+          },
+          "workflow_status": {
+            "description": "Workflows can have different statuses, such as running, waiting, succeeded with actions, or has errors. Review these statuses to diagnose workflow issues."
+          },
+          "search_for_workflow_runs": {
+            "steps": [
+              "Search by workflow ID or resource trigger parameters.",
+              "Use the Time filter to narrow down search results and view runs within a specific time window."
+            ]
+          }
+        }
+      },
+      "common_errors": {
+        "overview": {
+          "description": "Understanding common errors in Shopify Flow can help you troubleshoot and resolve issues quickly."
+        },
+        "types_of_errors": {
+          "transient_errors": {
+            "description": "Temporary errors that are retried until success or timeout. Typically occurs with partner connections or network issues."
+          },
+          "permanent_errors": {
+            "description": "Errors that prevent the task from running and cannot be retried. Examples include missing resources or invalid data."
+          },
+          "example_errors": [
+            {
+              "error_type": "Step timed out",
+              "cause": "Workflow tasks may take too long to execute, often due to large data sets."
+            },
+            {
+              "error_type": "GraphQL throttled",
+              "cause": "Excessive API usage due to complex workflows or data processing."
+            }
+          ]
+        }
+      }
+    }
+  }
+  

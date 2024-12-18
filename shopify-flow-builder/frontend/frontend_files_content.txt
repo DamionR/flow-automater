@@ -1,0 +1,981 @@
+Directory: /Users/damionrashford/shopify-flow-builder/frontend/app/components
+  - Header.jsx
+  - OutputSection.jsx
+  - DescriptionSection.jsx
+  - FeedbackButton.jsx
+  - SearchBar.jsx
+  - PageLayout.jsx
+
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/components/DescriptionSection.jsx
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+
+export default function DescriptionSection({ explanation }) {
+  console.log("DescriptionSection - Explanation Received:", explanation);
+
+  if (!explanation || Object.keys(explanation).length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="description-section p-6 bg-white border border-gray-300 rounded-md shadow-sm">
+      <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+        <span className="mr-2">📝</span> Workflow Description
+      </h3>
+
+      {/* Trigger */}
+      {explanation.trigger && (
+        <CollapsibleSection title="Trigger" icon="🚀">
+          <p className="text-gray-600">
+            <strong>Description:</strong> {explanation.trigger}
+          </p>
+        </CollapsibleSection>
+      )}
+
+      {/* Conditions */}
+      {explanation.conditions?.length > 0 && (
+        <CollapsibleSection title="Conditions" icon="🔍">
+          <ul className="list-disc ml-5 text-gray-600">
+            {explanation.conditions.map((cond, index) => (
+              <li key={index}>{cond}</li>
+            ))}
+          </ul>
+        </CollapsibleSection>
+      )}
+
+      {/* Actions */}
+      {explanation.actions?.length > 0 && (
+        <CollapsibleSection title="Actions" icon="⚙️">
+          <ul className="list-disc ml-5 text-gray-600">
+            {explanation.actions.map((action, index) => (
+              <li key={index}>{action}</li>
+            ))}
+          </ul>
+        </CollapsibleSection>
+      )}
+    </div>
+  );
+}
+
+function CollapsibleSection({ title, children, icon }) {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div className="mb-4">
+      <button
+        className="flex items-center justify-between w-full text-left focus:outline-none"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-controls={`${title}-content`}
+      >
+        <div className="flex items-center">
+          <span className="mr-2">{icon}</span>
+          <h4 className="text-lg font-semibold text-gray-700">{title}</h4>
+        </div>
+        {isOpen ? <ChevronUp className="h-5 w-5 text-gray-500" /> : <ChevronDown className="h-5 w-5 text-gray-500" />}
+      </button>
+      {isOpen && (
+        <div id={`${title}-content`} className="mt-2 pl-7">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/components/FeedbackButton.jsx
+export default function FeedbackButton() {
+    return (
+      <button className="feedback-button text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">
+        Leave Feedback
+      </button>
+    );
+  }
+  
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/components/Header.jsx
+import FeedbackButton from "./FeedbackButton";
+import SearchBar from "./SearchBar";
+
+export default function Header() {
+  return (
+    <header className="header flex justify-between items-center p-4 bg-blue-600 text-white">
+      <div className="header-left">
+        <FeedbackButton />
+      </div>
+      <div className="header-center">
+        <SearchBar />
+      </div>
+    </header>
+  );
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/components/OutputSection.jsx
+import { Clipboard, ClipboardCheck } from "lucide-react";
+import { useState } from "react";
+
+export default function OutputSection({ data }) {
+  if (!data || Object.keys(data).length === 0) {
+    return (
+      <div className="empty-state text-gray-500 italic mt-8 text-center">
+        No workflow generated yet. Describe your workflow to see results here.
+      </div>
+    );
+  }
+
+  const { trigger, conditions, actions, explanation } = data;
+
+  return (
+    <div className="output-section p-8">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-700">Generated Workflow</h2>
+
+      <div className="overflow-auto border border-gray-200 rounded-md shadow-sm bg-white max-h-screen">
+        <div className="p-6 space-y-8">
+
+          {/* Trigger Section */}
+          {trigger && (
+            <Card title="Trigger" icon="🚀">
+              <div className="bg-gray-50 p-4 rounded border border-gray-300">
+                <p className="text-gray-700 mb-2">
+                  <strong>Name:</strong> <span className="text-gray-900">{trigger.name}</span>
+                </p>
+                {trigger.parameters && (
+                  <CodeBlock content={JSON.stringify(trigger.parameters, null, 2)} />
+                )}
+              </div>
+            </Card>
+          )}
+
+          {/* Conditions Section */}
+          {conditions.length > 0 && (
+            <Card title="Conditions" icon="🔍">
+              {conditions.map((condition, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-50 p-4 rounded border border-gray-300 mb-2 flex justify-between items-start"
+                >
+                  <div>
+                    <p className="text-gray-700 mb-2">
+                      <strong>Name:</strong> <span className="text-gray-900">{condition.name}</span>
+                    </p>
+                    <CodeBlock content={JSON.stringify(condition.parameters, null, 2)} />
+                  </div>
+                  <CopyButton content={JSON.stringify(condition.parameters, null, 2)} />
+                </div>
+              ))}
+            </Card>
+          )}
+
+          {/* Actions Section */}
+          {actions.length > 0 && (
+            <Card title="Actions" icon="⚙️">
+              {actions.map((action, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-50 p-4 rounded border border-gray-300 mb-2 flex justify-between items-start"
+                >
+                  <div>
+                    <p className="text-gray-700 mb-2">
+                      <strong>Name:</strong> <span className="text-gray-900">{action.name}</span>
+                    </p>
+                    <CodeBlock content={JSON.stringify(action.parameters, null, 2)} />
+                  </div>
+                  <CopyButton content={JSON.stringify(action.parameters, null, 2)} />
+                </div>
+              ))}
+            </Card>
+          )}
+
+          {/* Explanation Section */}
+          {explanation && (
+            <Card title="Explanation" icon="📝">
+              <div className="bg-gray-50 p-4 rounded border border-gray-300">
+                {/* Trigger Explanation */}
+                {explanation.trigger && (
+                  <p className="text-gray-700 mb-2">
+                    <strong>Trigger:</strong> {explanation.trigger}
+                  </p>
+                )}
+
+                {/* Conditions Explanation */}
+                {explanation.conditions?.length > 0 && (
+                  <div className="mt-2">
+                    <h4 className="font-semibold mb-1">Conditions</h4>
+                    <ul className="list-disc ml-5 text-gray-700">
+                      {explanation.conditions.map((cond, index) => (
+                        <li key={index}>{cond}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Actions Explanation */}
+                {explanation.actions?.length > 0 && (
+                  <div className="mt-2">
+                    <h4 className="font-semibold mb-1">Actions</h4>
+                    <ul className="list-disc ml-5 text-gray-700">
+                      {explanation.actions.map((action, index) => (
+                        <li key={index}>{action}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </Card>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Card({ title, children, icon }) {
+  return (
+    <div className="mb-6">
+      <h3 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+        <span className="mr-2">{icon}</span> {title}
+      </h3>
+      {children}
+    </div>
+  );
+}
+
+function CodeBlock({ content }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="relative">
+      <pre className="bg-gray-100 text-sm p-3 rounded overflow-auto max-h-32 text-gray-800 font-mono">
+        {content}
+      </pre>
+      <button
+        onClick={handleCopy}
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+        aria-label="Copy Code"
+      >
+        {copied ? <ClipboardCheck className="h-5 w-5" /> : <Clipboard className="h-5 w-5" />}
+      </button>
+    </div>
+  );
+}
+
+function CopyButton({ content }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+      aria-label="Copy to clipboard"
+    >
+      {copied ? <ClipboardCheck className="h-5 w-5" /> : <Clipboard className="h-5 w-5" />}
+    </button>
+  );
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/components/PageLayout.jsx
+import FeedbackButton from "./FeedbackButton";
+import OutputSection from "./OutputSection";
+import DescriptionSection from "./DescriptionSection";
+
+export default function PageLayout({ children, onSearch, generatedData }) {
+  return (
+    <div className="page-layout flex flex-col h-screen bg-gray-50">
+      {/* Header */}
+      <header className="header flex justify-between items-center px-8 py-6 bg-blue-600 text-white">
+        <div className="text-2xl font-bold">Shopify Flow Builder</div>
+        <FeedbackButton />
+      </header>
+
+      {/* Main Content */}
+      <main className="content flex-1 p-8 overflow-y-auto">
+        <div className="max-w-4xl mx-auto">
+          {/* Search Bar */}
+          <div className="mb-8 flex justify-center">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const inputText = e.target.elements.searchInput.value;
+                onSearch(inputText);
+              }}
+              className="w-full"
+            >
+              <div className="relative max-w-4xl mx-auto">
+                <input
+                  name="searchInput"
+                  type="text"
+                  placeholder="Describe your workflow..."
+                  className="w-full px-6 py-4 border border-gray-300 rounded-full text-2xl shadow focus:outline-none focus:ring-4 focus:ring-blue-500"
+                  style={{ maxWidth: "800px" }}
+                />
+                <button
+                  type="submit"
+                  className="absolute inset-y-0 right-0 flex items-center pr-6"
+                >
+                  <span className="text-gray-500 text-3xl">🔍</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Render children */}
+          {children}
+
+          {/* Render OutputSection and DescriptionSection */}
+          {generatedData && (
+            <>
+              <OutputSection data={generatedData} />
+              <DescriptionSection explanation={generatedData.explanation} />
+            </>
+          )}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="footer p-6 bg-gray-800 text-white text-center">
+        <p>&copy; 2024 Shopify Flow Builder</p>
+      </footer>
+    </div>
+  );
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/components/SearchBar.jsx
+import { useState } from "react";
+import { Search, Loader2 } from "lucide-react";
+
+export default function SearchBar({ onSearch }) {
+  const [input, setInput] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleSearch = async () => {
+    const userInput = input.trim();
+    if (isProcessing || !userInput) return;
+
+    setIsProcessing(true);
+    console.log("==> Sending user input:", userInput);
+
+    try {
+      await onSearch(userInput);
+    } catch (error) {
+      console.error("Error processing search:", error.message);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    handleSearch();
+  };
+
+  return (
+    <form
+      className="search-bar relative w-full max-w-7xl mx-auto mt-12 px-4"
+      onSubmit={handleButtonClick}
+      aria-label="Workflow Search Form"
+    >
+      <div className="relative">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Describe your workflow in detail..."
+          disabled={isProcessing}
+          className={`w-full px-10 py-5 pr-16 text-2xl border rounded-full shadow-lg focus:outline-none focus:ring-4 transition duration-200 ${
+            isProcessing
+              ? "border-gray-300 bg-gray-100 cursor-not-allowed"
+              : "border-gray-300 focus:ring-blue-500"
+          }`}
+          aria-label="Workflow Description Input"
+        />
+        <div className="absolute inset-y-0 right-0 flex items-center pr-6">
+          {isProcessing ? (
+            <Loader2 className="animate-spin h-8 w-8 text-gray-600" aria-label="Loading" />
+          ) : (
+            <Search
+              className="h-8 w-8 text-gray-600 cursor-pointer"
+              onClick={handleButtonClick}
+              role="button"
+              aria-label="Search"
+            />
+          )}
+        </div>
+      </div>
+    </form>
+  );
+}
+
+================================================================================
+Directory: /Users/damionrashford/shopify-flow-builder/frontend/app/routes
+  - _index.jsx
+
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/routes/_index.jsx
+import { useState, useCallback } from "react";
+import debounce from "lodash.debounce";
+import PageLayout from "~/components/PageLayout";
+import { generateWorkflow } from "~/utils/api";
+
+export default function IndexRoute() {
+  const [generatedData, setGeneratedData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = useCallback(
+    debounce(async (inputText) => {
+      const userMessage = inputText?.trim(); // Clean and validate input
+      if (!userMessage) {
+        console.warn("==> Ignoring empty input");
+        return; // Avoid empty API calls
+      }
+
+      console.log("==> User input received:", userMessage);
+      setError(null);
+      setIsLoading(true);
+      setGeneratedData(null);
+
+      try {
+        const response = await generateWorkflow(userMessage); // Call the API
+        console.log("==> Raw AI Response:", response);
+
+        if (response && response.aiResponse) {
+          // Extract the JSON block from the AI response using regex
+          const jsonMatch = response.aiResponse.match(/```json\n([\s\S]*?)\n```/);
+
+          if (jsonMatch && jsonMatch[1]) {
+            // Parse the extracted JSON string
+            const parsedData = JSON.parse(jsonMatch[1]);
+            console.log("==> Parsed AI Response:", parsedData);
+
+            // Update the state with the parsed data
+            setGeneratedData({
+              trigger: parsedData.trigger || null,
+              conditions: parsedData.conditions || [],
+              actions: parsedData.actions || [],
+              explanation: parsedData.explanation || null,
+            });
+          } else {
+            throw new Error("Unable to extract JSON from AI response.");
+          }
+        } else {
+          throw new Error("Incomplete response received from backend.");
+        }
+      } catch (err) {
+        console.error("Error processing workflow:", err.message);
+        setError("Something went wrong. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    }, 500), // 500ms debounce
+    []
+  );
+
+  return (
+    <PageLayout onSearch={handleSearch} generatedData={generatedData}>
+      {/* Display error message */}
+      {error && (
+        <div className="error text-red-600 text-center mt-4">
+          {error}
+        </div>
+      )}
+
+      {/* Display loading message */}
+      {isLoading && (
+        <div className="loading text-gray-500 text-lg mt-8 text-center">
+          Generating your workflow...
+        </div>
+      )}
+    </PageLayout>
+  );
+}
+
+================================================================================
+Directory: /Users/damionrashford/shopify-flow-builder/frontend/app/utils
+  - api.js
+
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/utils/api.js
+export const generateWorkflow = async (message) => {
+  console.log("==> Sending request to /direct-ai endpoint");
+  console.log("Request Payload:", { message });
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/direct-ai`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      }
+    );
+
+    console.log("Response Status:", response.status);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error Response from Backend:", errorData);
+      throw new Error(errorData.error || "Failed to process AI response");
+    }
+
+    const data = await response.json();
+    console.log("Response Data from Backend:", data);
+
+    return data; // Return the AI response
+  } catch (error) {
+    console.error("Error generating workflow:", error.message);
+    throw new Error(error.message || "Failed to generate workflow");
+  }
+};
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/root.jsx
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import "./tailwind.css";
+
+export default function Root() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/app/tailwind.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Layout Styling */
+.page-layout {
+  @apply flex flex-col h-screen bg-white text-gray-900;
+}
+
+.header {
+  @apply flex items-center justify-between bg-blue-600 text-white p-6 shadow-md; /* Header size */
+}
+
+.search-bar {
+  @apply relative w-full max-w-6xl mx-auto mt-16 px-4;
+}
+
+.search-input {
+  @apply w-full px-8 py-4 pr-14 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.feedback-button {
+  @apply px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400;
+}
+
+/* Main Content Section */
+.content {
+  @apply flex flex-col gap-8 max-w-6xl mx-auto p-8 flex-grow overflow-hidden; /* Flex-grow and overflow-hidden to fit content */
+}
+
+/* Cards Layout */
+.results {
+  @apply mt-8 flex justify-between gap-16 flex-wrap; /* Increased gap for spacing */
+}
+
+.card {
+  @apply w-full max-w-xl bg-white p-12 rounded-md shadow-md hover:bg-gray-100 transition-colors duration-200;
+}
+
+.download-section {
+  @apply mt-6;
+}
+
+.download-button {
+  @apply inline-block mt-4 px-6 py-3 bg-green-500 text-white rounded-md font-medium hover:bg-green-400;
+}
+
+.empty-state {
+  @apply text-gray-500 italic text-center mt-8 text-lg;
+}
+
+/* Footer */
+.footer {
+  @apply bg-gray-800 text-white text-center p-6;
+}
+
+.footer p {
+  @apply text-sm;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1024px) {
+  .search-bar {
+    @apply w-full px-4;
+  }
+
+  .results {
+    @apply flex-wrap;
+  }
+
+  .card {
+    @apply w-full max-w-md;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    @apply w-full px-4;
+  }
+
+  .results {
+    @apply flex-col gap-8;
+  }
+
+  .feedback-button {
+    @apply text-sm px-4 py-2;
+  }
+
+  .card {
+    @apply w-full max-w-full;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    @apply text-sm;
+  }
+
+  .feedback-button {
+    @apply px-3 py-1;
+  }
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/public/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shopify Flow Builder application for generating automated workflows.">
+  <title>Shopify Flow Builder</title>
+  <link rel="icon" href="/vite.svg" type="image/svg+xml">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #root {
+      width: 100%;
+      height: 100%;
+    }
+    .loading {
+      font-size: 1.5rem;
+      color: #646cff;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+  </div>
+  <script type="module" src="/src/index.jsx"></script>
+</body>
+</html>
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/.env
+# Backend API Base URL
+VITE_API_BASE_URL=http://127.0.0.1:5001
+
+# Environment
+VITE_ENV=development
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/.eslintrc.cjs
+/**
+ * This is intended to be a basic starting point for linting in your app.
+ * It relies on recommended configs out of the box for simplicity, but you can
+ * and should modify this configuration to best suit your team's needs.
+ */
+
+/** @type {import('eslint').Linter.Config} */
+module.exports = {
+  root: true,
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  env: {
+    browser: true,
+    commonjs: true,
+    es6: true,
+  },
+  ignorePatterns: ["!**/.server", "!**/.client"],
+
+  // Base config
+  extends: ["eslint:recommended"],
+
+  overrides: [
+    // React
+    {
+      files: ["**/*.{js,jsx,ts,tsx}"],
+      plugins: ["react", "jsx-a11y"],
+      extends: [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended",
+        "plugin:jsx-a11y/recommended",
+      ],
+      settings: {
+        react: {
+          version: "detect",
+        },
+        formComponents: ["Form"],
+        linkComponents: [
+          { name: "Link", linkAttribute: "to" },
+          { name: "NavLink", linkAttribute: "to" },
+        ],
+        "import/resolver": {
+          typescript: {},
+        },
+      },
+    },
+
+    // Typescript
+    {
+      files: ["**/*.{ts,tsx}"],
+      plugins: ["@typescript-eslint", "import"],
+      parser: "@typescript-eslint/parser",
+      settings: {
+        "import/internal-regex": "^~/",
+        "import/resolver": {
+          node: {
+            extensions: [".ts", ".tsx"],
+          },
+          typescript: {
+            alwaysTryTypes: true,
+          },
+        },
+      },
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+      ],
+    },
+
+    // Node
+    {
+      files: [".eslintrc.cjs"],
+      env: {
+        node: true,
+      },
+    },
+  ],
+};
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/tailwind.config.js
+// tailwind.config.js
+export default {
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}", // Include all app files
+    "./public/**/*.html", // Include public HTML files
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          light: "#60a5fa", // blue-400
+          DEFAULT: "#3b82f6", // blue-500
+          dark: "#2563eb", // blue-600
+        },
+        secondary: {
+          light: "#f87171", // red-400
+          DEFAULT: "#ef4444", // red-500
+          dark: "#dc2626", // red-600
+        },
+      },
+      fontFamily: {
+        sans: [
+          "Inter",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji",
+        ],
+      },
+      // Add custom spacing, border-radius, etc., as needed
+    },
+  },
+  plugins: [],
+};
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/tsconfig.json
+{
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/.server/**/*.ts",
+    "**/.server/**/*.tsx",
+    "**/.client/**/*.ts",
+    "**/.client/**/*.tsx"
+, "vite.config.js", "app/routes/_index.jsx", "app/root.jsx", "tailwind.config.js"  ],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "types": ["@remix-run/node", "vite/client"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "strict": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./app/*"]
+    },
+
+    // Vite takes care of building everything, not tsc.
+    "noEmit": true
+  }
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/vite.config.js
+import { vitePlugin as remix } from "@remix-run/dev";
+import { defineConfig } from "vite";
+import { EventEmitter } from "events";
+
+EventEmitter.defaultMaxListeners = 20;
+
+export default defineConfig({
+  plugins: [
+    remix({
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+        v3_singleFetch: true,
+        v3_lazyRouteDiscovery: true,
+      },
+    }),
+  ],
+  resolve: {
+    alias: {
+      "~": "/app",
+    },
+  },
+  define: {
+    "process.env": {}, // Add this to avoid the "process is not defined" error
+  },
+});
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/package.json
+{
+  "name": "shopify-flow-builder",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "start": "remix-serve ./build/server/index.js",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@remix-run/node": "^2.15.1",
+    "@remix-run/react": "^2.15.1",
+    "@remix-run/serve": "^2.15.1",
+    "isbot": "^4.1.0",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.468.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.15.1",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.38.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.1.6",
+    "vite": "^5.1.0",
+    "vite-tsconfig-paths": "^4.2.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
+
+================================================================================
+File: /Users/damionrashford/shopify-flow-builder/frontend/postcss.config.js
+export default {
+  plugins: {
+    tailwindcss: {}, // Load Tailwind CSS
+    autoprefixer: {}, // Add vendor prefixes automatically
+  },
+};
+
+================================================================================

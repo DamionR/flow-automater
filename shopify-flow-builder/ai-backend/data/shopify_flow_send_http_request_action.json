@@ -1,0 +1,82 @@
+{
+  "name": "send_http_request",
+  "description": "Sends an HTTP request to a web server or URL.",
+  "category": "webhook",
+  
+  "overview": {
+    "description": "The Send HTTP Request action connects your workflow to an external service, allowing you to trigger HTTP requests from your store. It supports several HTTP methods and can be used to integrate with third-party APIs or webhooks."
+  },
+  
+  "fields": {
+    "method": {
+      "description": "Specifies the HTTP method (e.g., GET, POST, PUT) to use for the request.",
+      "options": [
+        "GET",
+        "DELETE",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "PUT",
+        "POST"
+      ]
+    },
+    "url": {
+      "description": "The URL of the server that will receive the HTTP request."
+    },
+    "headers": {
+      "description": "Custom headers to include in the HTTP request, such as 'Content-Type'. This allows you to configure your request with necessary metadata."
+    },
+    "body": {
+      "description": "The payload to send along with the request. For POST or PUT requests, this is the body of the request, typically in JSON or form format."
+    }
+  },
+
+  "triggers": {
+    "description": "The Send HTTP Request action can be used with any workflow trigger."
+  },
+
+  "response_codes": {
+    "success": {
+      "description": "HTTP response codes from the 2XX or 3XX range indicate a successful request. The workflow will continue executing subsequent actions.",
+      "codes": [
+        200, 201, 202, 204, 301, 302, 304, 307, 308
+      ]
+    },
+    "retry": {
+      "description": "Flow will retry the HTTP request if a 429 or 5XX response code is returned. This retry process continues for up to 24 hours until a different response code is received or the retry limit is reached.",
+      "codes": [
+        429, 500, 502, 503, 504
+      ]
+    },
+    "fail": {
+      "description": "If the HTTP request returns an unrecognized code or times out after retries, the workflow will fail and no further actions will be taken.",
+      "codes": ["other"]
+    }
+  },
+
+  "limitations": {
+    "description": "The Send HTTP request action does not return any data from the server's response. If you need to capture response data, consider using other Shopify actions like the 'Send Admin API Request'."
+  },
+
+  "templates": {
+    "notify_fulfillment_provider": {
+      "description": "This template sends an HTTP request to a fulfillment provider when orders are tagged as 'Warehouse' in Order Tagger. It includes order details in the request for processing by the fulfillment provider."
+    }
+  },
+
+  "example": {
+    "description": "This example demonstrates how to use the Send HTTP Request action to send a POST request to an external service when a product status is updated.",
+    "steps": [
+      "1. Set up a web service to receive HTTP requests, such as 'Request Catcher'.",
+      "2. Select the 'Product status updated' trigger in Shopify Flow.",
+      "3. Add the 'Send HTTP Request' action and configure the following fields:",
+      "   - HTTP Method: POST",
+      "   - URL: https://shopifyflow.requestcatcher.com/test",
+      "   - Headers: Content-Type: text/plain",
+      "   - Body: Include the product title and updated status.",
+      "4. Activate the workflow.",
+      "5. Test the workflow by changing the status of a product (e.g., from 'Draft' to 'Active').",
+      "6. Check the results in the external testing service (Request Catcher)."
+    ]
+  }
+}

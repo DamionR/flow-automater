@@ -1,0 +1,3246 @@
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/empty_workflow.json ---
+
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shopify Flow Workflow",
+  "type": "object",
+  "properties": {
+    "__metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["version"]
+    },
+    "root": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {}
+        },
+        "links": {
+          "type": "array",
+          "items": {}
+        },
+        "patched_fields": {
+          "type": "array",
+          "items": {}
+        },
+        "workflow_name": {
+          "type": "string"
+        }
+      },
+      "required": ["steps", "links", "patched_fields", "workflow_name"]
+    }
+  },
+  "required": ["__metadata", "root"]
+}
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/empty_workflow.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/send_admin_api_request.json ---
+
+{
+    "description": "The Send Admin API request action sends a mutation to the Shopify GraphQL Admin API. By doing so, you can do almost any action the API allows using Flow.",
+    "action": {
+      "name": "Send Admin API request",
+      "fields": [
+        {
+          "name": "Mutation",
+          "description": "Required. The Shopify GraphQL Admin mutation that you want to call. A mutation is an API that takes action or updates data."
+        },
+        {
+          "name": "Mutation inputs",
+          "description": "Required. The data (in JSON) that you need to send as part of your mutation request. Each mutation requires a different set of data, which is documented in the link provided for each mutation. To construct the necessary JSON, you can use Liquid or a Run code action."
+        }
+      ],
+      "triggers": "The Send Admin API request action can be used in any workflow, with any trigger, as long as the workflow provides the data necessary to construct the mutation inputs.",
+      "examples": [
+        {
+          "name": "Example 1: Update the template used for a product",
+          "description": "Use the Send Admin API request action to call the productUpdate mutation to update the template used for a product. The id field is required and must be a valid product GID. This example assumes that your workflow has a trigger that provides a product object.",
+          "input": {
+            "templateSuffix": "pre-order",
+            "id": "{{product.id}}"
+          }
+        },
+        {
+          "name": "Example 2: Update a customer's tax exemption status",
+          "description": "Use the Send Admin API request action to call the customerUpdate mutation to update a customer's tax exemption status. The id field is required and must be a valid customer GID. This example assumes that your workflow has a trigger that provides an order object.",
+          "input": {
+            "id": "{{order.customer.id}}",
+            "taxExempt": true
+          }
+        },
+        {
+          "name": "Example 3: Update a customer's locale",
+          "description": "Use the Send Admin API request action to call the customerUpdate mutation to update a customer's locale. The id field is required and must be a valid customer GID. This example assumes that your workflow has a trigger that provides a customer object.",
+          "input": {
+            "id": "{{customer.id}}",
+            "locale": "en"
+          }
+        }
+      ],
+      "liquid_tips": [
+        {
+          "tip": "Working with strings",
+          "description": "Use the json filter to escape the string and ensure proper JSON formatting. This example updates the note on a customer.",
+          "input": "{% assign revisedNote = customer.note | append: \" Hello from Flow!\" %}\n{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"note\": {{ revisedNote | json }}\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"note\": \"Had a \\\"great experience\\\" with their latest order. Hello from Flow!\"\n  }\n}"
+        },
+        {
+          "tip": "Working with arrays",
+          "description": "Use the json filter to transform a liquid array into a JSON array. This example outputs a JSON array when provided with a liquid array.",
+          "input": "{% assign tags = \"tag1,tag2,tag3\" | split: \",\" %}\n{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"tags\": {{ tags | json }}\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"tags\": [\"tag1\", \"tag2\", \"tag3\"]\n  }\n}"
+        },
+        {
+          "tip": "For loop example",
+          "description": "Use a loop to output elements of an array, separated by commas.",
+          "input": "{% assign tags = \"tag1,tag2,tag3\" | split: \",\" %}\n{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"tags\": [\n      {% for tag in tags %}\n        \"{{ tag }}\"{% unless forloop.last %},{% endunless %}\n      {% endfor %}\n    ]\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"tags\": [\"tag1\", \"tag2\", \"tag3\"]\n  }\n}"
+        },
+        {
+          "tip": "Map example",
+          "description": "The map filter can be used to get an array of a specific property from an array of objects.",
+          "input": "{\n  \"input\": {\n    \"id\": \"{{ customer.id }}\",\n    \"tags\": {{ customer.addresses | map: \"city\" | json }}\n  }\n}",
+          "result": "{\n  \"input\": {\n    \"id\": \"gid://shopify/Customer/1234\",\n    \"tags\": [\"Ottawa\", \"Toronto\"]\n  }\n}"
+        }
+      ],
+      "limitations": [
+        "The action will display a list of Mutations and Mutation inputs from Shopify Admin API version 2024-04.",
+        "When the Admin API version is upgraded, this action can fail if relying on a field with a breaking change.",
+        "The action doesn't support GraphQL queries, only mutations.",
+        "The action doesn't support mutations that have been deprecated.",
+        "The action doesn't support some mutations that are specific to certain apps, including some subscription, marketing activity, and discount mutations.",
+        "The action doesn't support asynchronous mutations or mutations that return a Job type.",
+        "The action doesn't support mutations that do not implement the Node interface."
+      ],
+      "templates": [
+        {
+          "name": "Add free (discounted 100%) item to new orders",
+          "description": "Adds a free, discounted item to new orders if the item is in stock. This automation enhances customer satisfaction by including a surprise free item in their order, promotes new or less-known products, or streamlines promotions."
+        },
+        {
+          "name": "Allow ordering for companies created by company account requests",
+          "description": "Assign an ordering permission when a company is created by a company account request."
+        },
+        {
+          "name": "Change product template when variants are out of stock or back in stock",
+          "description": "Updates the product template based on the inventory for the product's variants. The workflow switches templates between in-stock, out-of-stock, and when one or more variants are out of stock."
+        },
+        {
+          "name": "Fulfill any digital items in an order",
+          "description": "Fulfills any items that have no physical delivery required, such as digital items, or that match a list of SKUs. Runs once for each fulfillment location for a new order."
+        }
+      ]
+    }
+  }
+  
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/send_admin_api_request.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_actions.json ---
+
+{
+  "actions": [
+    {
+      "name": "add_catalog_to_company_location",
+      "description": "Adds a catalog to a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "catalog_id",
+          "type": "string",
+          "description": "The ID of the catalog."
+        }
+      ]
+    },
+    {
+      "name": "add_customer_tags",
+      "description": "Adds tags to a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the customer."
+        }
+      ]
+    },
+    {
+      "name": "add_draft_order_tags",
+      "description": "Adds tags to a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the draft order."
+        }
+      ]
+    },
+    {
+      "name": "add_order_line_item",
+      "description": "Adds a line item to an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        },
+        {
+          "name": "quantity",
+          "type": "number",
+          "description": "The quantity of the variant to add."
+        }
+      ]
+    },
+    {
+      "name": "add_order_tags",
+      "description": "Adds tags to an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the order."
+        }
+      ]
+    },
+    {
+      "name": "add_product_tags",
+      "description": "Adds tags to a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to add to the product."
+        }
+      ]
+    },
+    {
+      "name": "add_product_to_collections",
+      "description": "Adds a product to collections.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "collection_ids",
+          "type": "list",
+          "description": "The IDs of the collections to add the product to."
+        }
+      ]
+    },
+    {
+      "name": "archive_order",
+      "description": "Archives an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order to archive."
+        }
+      ]
+    },
+    {
+      "name": "cancel_order",
+      "description": "Cancels an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "reason",
+          "type": "string",
+          "description": "The reason for canceling the order."
+        }
+      ]
+    },
+    {
+      "name": "cancel_return",
+      "description": "Cancels a return.",
+      "category": "return",
+      "parameters": [
+        {
+          "name": "return_id",
+          "type": "string",
+          "description": "The ID of the return to cancel."
+        }
+      ]
+    },
+    {
+      "name": "capture_payment",
+      "description": "Captures a payment.",
+      "category": "payment",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order to capture payment for."
+        }
+      ]
+    },
+    {
+      "name": "count",
+      "description": "Counts the number of items in a list.",
+      "category": "list",
+      "parameters": [
+        {
+          "name": "list",
+          "type": "list",
+          "description": "The list to count items from."
+        }
+      ]
+    },
+    {
+      "name": "create_redirect_url",
+      "description": "Creates a redirect URL.",
+      "category": "url",
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "The path for the redirect URL."
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "The target URL for the redirect."
+        }
+      ]
+    },
+    {
+      "name": "delete_redirect_urls",
+      "description": "Deletes redirect URLs.",
+      "category": "url",
+      "parameters": [
+        {
+          "name": "paths",
+          "type": "list",
+          "description": "The paths of the redirect URLs to delete."
+        }
+      ]
+    },
+    {
+      "name": "create_metafield_definition",
+      "description": "Creates a metafield definition.",
+      "category": "metafield",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The name of the metafield definition."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield definition."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield definition."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "The type of the metafield definition (e.g., 'string', 'integer', 'json')."
+        }
+      ]
+    },
+    {
+      "name": "delete_company",
+      "description": "Deletes a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company to delete."
+        }
+      ]
+    },
+    {
+      "name": "delete_customer",
+      "description": "Deletes a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer to delete."
+        }
+      ]
+    },
+    {
+      "name": "delete_product_variant",
+      "description": "Deletes a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant to delete."
+        }
+      ]
+    },
+    {
+      "name": "delete_product",
+      "description": "Deletes a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product to delete."
+        }
+      ]
+    },
+    {
+      "name": "for_each",
+      "description": "Iterates over a list and performs actions for each item.",
+      "category": "list",
+      "parameters": [
+        {
+          "name": "list",
+          "type": "list",
+          "description": "The list to iterate over."
+        },
+        {
+          "name": "actions",
+          "type": "list",
+          "description": "The actions to perform for each item in the list."
+        }
+      ]
+    },
+    {
+      "name": "get_collection_data",
+      "description": "Retrieves data for a collection.",
+      "category": "collection",
+      "parameters": [
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        }
+      ]
+    },
+    {
+      "name": "get_company_data",
+      "description": "Retrieves data for a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        }
+      ]
+    },
+    {
+      "name": "get_company_location_data",
+      "description": "Retrieves data for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        }
+      ]
+    },
+    {
+      "name": "get_customer_data",
+      "description": "Retrieves data for a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        }
+      ]
+    },
+    {
+      "name": "get_discount_data",
+      "description": "Retrieves data for a discount.",
+      "category": "discount",
+      "parameters": [
+        {
+          "name": "discount_id",
+          "type": "string",
+          "description": "The ID of the discount."
+        }
+      ]
+    },
+    {
+      "name": "get_draft_order_data",
+      "description": "Retrieves data for a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        }
+      ]
+    },
+    {
+      "name": "get_fulfillment_order_data",
+      "description": "Retrieves data for a fulfillment order.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "get_order_data",
+      "description": "Retrieves data for an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "get_selling_plan_group_data",
+      "description": "Retrieves data for a selling plan group.",
+      "category": "selling_plan",
+      "parameters": [
+        {
+          "name": "selling_plan_group_id",
+          "type": "string",
+          "description": "The ID of the selling plan group."
+        }
+      ]
+    },
+    {
+      "name": "get_subscription_billing_attempt_data",
+      "description": "Retrieves data for a subscription billing attempt.",
+      "category": "subscription",
+      "parameters": [
+        {
+          "name": "subscription_billing_attempt_id",
+          "type": "string",
+          "description": "The ID of the subscription billing attempt."
+        }
+      ]
+    },
+    {
+      "name": "get_product_data",
+      "description": "Retrieves data for a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        }
+      ]
+    },
+    {
+      "name": "get_product_variant_data",
+      "description": "Retrieves data for a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        }
+      ]
+    },
+    {
+      "name": "get_subscription_contract_data",
+      "description": "Retrieves data for a subscription contract.",
+      "category": "subscription",
+      "parameters": [
+        {
+          "name": "subscription_contract_id",
+          "type": "string",
+          "description": "The ID of the subscription contract."
+        }
+      ]
+    },
+    {
+      "name": "hold_fulfillment_order",
+      "description": "Holds a fulfillment order.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "description": "The reason for holding the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "mark_fulfillment_order_as_fulfilled",
+      "description": "Marks a fulfillment order as fulfilled.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "log_output",
+      "description": "Logs output to the workflow activity log.",
+      "category": "logging",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "string",
+          "description": "The message to log."
+        }
+      ]
+    },
+    {
+      "name": "look_up_customer_in_segment",
+      "description": "Looks up a customer in a segment.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "segment_id",
+          "type": "string",
+          "description": "The ID of the segment."
+        }
+      ]
+    },
+    {
+      "name": "mark_order_as_paid",
+      "description": "Marks an order as paid.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "move_fulfillment_order",
+      "description": "Moves a fulfillment order to a different location.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        },
+        {
+          "name": "new_location_id",
+          "type": "string",
+          "description": "The ID of the new location."
+        }
+      ]
+    },
+    {
+      "name": "publish_product",
+      "description": "Publishes a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        }
+      ]
+    },
+    {
+      "name": "release_fulfillment_order_holds",
+      "description": "Releases holds on a fulfillment order.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "fulfillment_order_id",
+          "type": "string",
+          "description": "The ID of the fulfillment order."
+        }
+      ]
+    },
+    {
+      "name": "remove_catalog_from_company_location",
+      "description": "Removes a catalog from a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "catalog_id",
+          "type": "string",
+          "description": "The ID of the catalog."
+        }
+      ]
+    },
+    {
+      "name": "remove_collection_metafield",
+      "description": "Removes a metafield from a collection.",
+      "category": "collection",
+      "parameters": [
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_company_metafield",
+      "description": "Removes a metafield from a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_company_location_metafield",
+      "description": "Removes a metafield from a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_customer_metafield",
+      "description": "Removes a metafield from a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_customer_tags",
+      "description": "Removes tags from a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the customer."
+        }
+      ]
+    },
+    {
+      "name": "remove_draft_order_metafield",
+      "description": "Removes a metafield from a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_draft_order_tags",
+      "description": "Removes tags from a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the draft order."
+        }
+      ]
+    },
+    {
+      "name": "remove_order_metafield",
+      "description": "Removes a metafield from an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_order_tags",
+      "description": "Removes tags from an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the order."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_from_collection",
+      "description": "Removes a product from a collection.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_metafield",
+      "description": "Removes a metafield from a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_tags",
+      "description": "Removes tags from a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "tags",
+          "type": "list",
+          "description": "The tags to remove from the product."
+        }
+      ]
+    },
+    {
+      "name": "remove_product_variant_metafield",
+      "description": "Removes a metafield from a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "remove_shop_metafield",
+      "description": "Removes a metafield from a shop.",
+      "category": "shop",
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "run_code",
+      "description": "Runs custom code within a workflow.",
+      "category": "code",
+      "parameters": [
+        {
+          "name": "code",
+          "type": "string",
+          "description": "The code to run."
+        }
+      ]
+    },
+    {
+      "name": "send_internal_email",
+      "description": "Sends an email to a staff member.",
+      "category": "email",
+      "parameters": [
+        {
+          "name": "recipient",
+          "type": "string",
+          "description": "The email address of the recipient."
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "description": "The subject of the email."
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "description": "The body of the email."
+        }
+      ]
+    },
+    {
+      "name": "submit_fulfillment_request",
+      "description": "Submits a fulfillment request.",
+      "category": "fulfillment",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "line_item_ids",
+          "type": "list",
+          "description": "The IDs of the line items to fulfill."
+        }
+      ]
+    },
+    {
+      "name": "send_admin_api_request",
+      "description": "Sends an API request to the Shopify Admin API.",
+      "category": "api",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "The HTTP method (e.g., 'GET', 'POST', 'PUT', 'DELETE')."
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "The API endpoint URL."
+        },
+        {
+          "name": "headers",
+          "type": "object",
+          "description": "The request headers."
+        },
+        {
+          "name": "body",
+          "type": "object",
+          "description": "The request body."
+        }
+      ]
+    },
+    {
+      "name": "send_http_request",
+      "description": "Sends an HTTP request to an external service.",
+      "category": "webhook",
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "The HTTP method (e.g., 'GET', 'POST', 'PUT', 'DELETE')."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "The URL to send the request to."
+        },
+        {
+          "name": "headers",
+          "type": "object",
+          "description": "The request headers."
+        },
+        {
+          "name": "body",
+          "type": "object",
+          "description": "The request body."
+        }
+      ]
+    },
+    {
+      "name": "send_b2b_access_email",
+      "description": "Sends a B2B access email to a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        }
+      ]
+    },
+    {
+      "name": "send_payment_reminder",
+      "description": "Sends a payment reminder to a customer.",
+      "category": "payment",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "send_draft_order_invoice",
+      "description": "Sends a draft order invoice to a customer.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        }
+      ]
+    },
+    {
+      "name": "send_order_invoice",
+      "description": "Sends an order invoice to a customer.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        }
+      ]
+    },
+    {
+      "name": "send_shopify_alert_for_errors",
+      "description": "Sends a Shopify alert for errors.",
+      "category": "notification",
+      "parameters": [
+        {
+          "name": "message",
+          "type": "string",
+          "description": "The error message."
+        }
+      ]
+    },
+    {
+      "name": "sum",
+      "description": "Calculates the sum of numbers in a list.",
+      "category": "list",
+      "parameters": [
+        {
+          "name": "list",
+          "type": "list",
+          "description": "The list of numbers to sum."
+        }
+      ]
+    },
+    {
+      "name": "unarchive_order",
+      "description": "Unarchives an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order to unarchive."
+        }
+      ]
+    },
+    {
+      "name": "unpublish_product",
+      "description": "Unpublishes a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        }
+      ]
+    },
+    {
+      "name": "update_collection_metafield",
+      "description": "Updates a metafield on a collection.",
+      "category": "collection",
+      "parameters": [
+        {
+          "name": "collection_id",
+          "type": "string",
+          "description": "The ID of the collection."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_company_note",
+      "description": "Updates a note on a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_company_metafield",
+      "description": "Updates a metafield on a company.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "description": "The ID of the company."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_company_location_note",
+      "description": "Updates a note on a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_company_location_metafield",
+      "description": "Updates a metafield on a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_company_location_payment_terms",
+      "description": "Updates the payment terms for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "payment_terms",
+          "type": "string",
+          "description": "The new payment terms."
+        }
+      ]
+    },
+    {
+      "name": "update_checkout_to_draft_for_company_location",
+      "description": "Updates a checkout to a draft order for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "checkout_id",
+          "type": "string",
+          "description": "The ID of the checkout."
+        },
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        }
+      ]
+    },
+    {
+      "name": "update_editable_shipping_address_for_company_location",
+      "description": "Updates the editable shipping address for a company location.",
+      "category": "company",
+      "parameters": [
+        {
+          "name": "company_location_id",
+          "type": "string",
+          "description": "The ID of the company location."
+        },
+        {
+          "name": "address",
+          "type": "object",
+          "description": "The new shipping address."
+        }
+      ]
+    },
+    {
+      "name": "update_customer_metafield",
+      "description": "Updates a metafield on a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_customer_note",
+      "description": "Updates a note on a customer.",
+      "category": "customer",
+      "parameters": [
+        {
+          "name": "customer_id",
+          "type": "string",
+          "description": "The ID of the customer."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_draft_order_metafield",
+      "description": "Updates a metafield on a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_draft_order_note",
+      "description": "Updates a note on a draft order.",
+      "category": "draft_order",
+      "parameters": [
+        {
+          "name": "draft_order_id",
+          "type": "string",
+          "description": "The ID of the draft order."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_order_metafield",
+      "description": "Updates a metafield on an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_order_note",
+      "description": "Updates a note on an order.",
+      "category": "order",
+      "parameters": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "The ID of the order."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "The new note."
+        }
+      ]
+    },
+    {
+      "name": "update_product_metafield",
+      "description": "Updates a metafield on a product.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_product_status",
+      "description": "Updates the status of a product (e.g., 'active', 'archived', 'draft').",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "description": "The ID of the product."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "The new status of the product."
+        }
+      ]
+    },
+    {
+      "name": "update_product_variant_metafield",
+      "description": "Updates a metafield on a product variant.",
+      "category": "product",
+      "parameters": [
+        {
+          "name": "variant_id",
+          "type": "string",
+          "description": "The ID of the product variant."
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "update_shop_metafield",
+      "description": "Updates a metafield on a shop.",
+      "category": "shop",
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new value of the metafield."
+        }
+      ]
+    },
+    {
+      "name": "wait",
+      "description": "Pauses the workflow for a specified amount of time.",
+      "category": "workflow",
+      "parameters": [
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "The duration to wait (e.g., '5 minutes', '1 hour', '2 days')."
+        }
+      ]
+    }
+  ]
+}
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_actions.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_conditions.json ---
+
+{
+  "description": "Conditions in Shopify Flow are used to control the path of a workflow by evaluating specific data points in your store. When creating a condition, you select a data field, apply a logical operator, and check against a predefined value. These conditions help automate tasks such as determining order status, customer eligibility, and product availability based on various criteria. Conditions can be static or dynamic and can include multiple logical operators to define complex workflows.",
+  "conditions": [
+    {
+      "name": "order_total_greater_than",
+      "description": "Checks if the total price of an order is greater than a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "greater_than",
+      "value_type": "number"
+    },
+    {
+      "name": "order_total_greater_than_or_equal_to",
+      "description": "Checks if the total price of an order is greater than or equal to a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "greater_than_or_equal_to",
+      "value_type": "number"
+    },
+    {
+      "name": "order_total_less_than",
+      "description": "Checks if the total price of an order is less than a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "less_than",
+      "value_type": "number"
+    },
+    {
+      "name": "order_total_less_than_or_equal_to",
+      "description": "Checks if the total price of an order is less than or equal to a specified value.",
+      "data_field": "order.totalPriceSet.shopMoney.amount",
+      "logical_operator": "less_than_or_equal_to",
+      "value_type": "number"
+    },
+    {
+      "name": "customer_accepts_marketing",
+      "description": "Checks if the customer has agreed to receive marketing emails.",
+      "data_field": "customer.acceptsMarketing",
+      "logical_operator": "equal_to",
+      "value_type": "boolean"
+    },
+    {
+      "name": "customer_does_not_accept_marketing",
+      "description": "Checks if the customer has not agreed to receive marketing emails.",
+      "data_field": "customer.acceptsMarketing",
+      "logical_operator": "not_equal_to",
+      "value_type": "boolean"
+    },
+    {
+      "name": "order_contains_product_with_tag",
+      "description": "Checks if the order contains at least one product with a specific tag.",
+      "data_field": "order.lineItems.product.tags",
+      "logical_operator": "at_least_one_of",
+      "value_type": "string",
+      "list_operator": "at_least_one_of"
+    },
+    {
+      "name": "order_does_not_contain_product_with_tag",
+      "description": "Checks if the order does not contain any product with a specific tag.",
+      "data_field": "order.lineItems.product.tags",
+      "logical_operator": "not_any_of",
+      "value_type": "string",
+      "list_operator": "none_of"
+    },
+    {
+      "name": "order_shipping_country_is",
+      "description": "Checks if the order's shipping country matches a specific country.",
+      "data_field": "order.shippingAddress.country",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_shipping_country_is_not",
+      "description": "Checks if the order's shipping country does not match a specific country.",
+      "data_field": "order.shippingAddress.country",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_title_is",
+      "description": "Checks if the product title matches a specific value.",
+      "data_field": "product.title",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_title_is_not",
+      "description": "Checks if the product title does not match a specific value.",
+      "data_field": "product.title",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_vendor_is",
+      "description": "Checks if the product vendor matches a specific value.",
+      "data_field": "product.vendor",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "product_vendor_is_not",
+      "description": "Checks if the product vendor does not match a specific value.",
+      "data_field": "product.vendor",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "customer_has_tag",
+      "description": "Checks if the customer has a specific tag.",
+      "data_field": "customer.tags",
+      "logical_operator": "at_least_one_of",
+      "value_type": "string",
+      "list_operator": "at_least_one_of"
+    },
+    {
+      "name": "customer_does_not_have_tag",
+      "description": "Checks if the customer does not have a specific tag.",
+      "data_field": "customer.tags",
+      "logical_operator": "not_any_of",
+      "value_type": "string",
+      "list_operator": "none_of"
+    },
+    {
+      "name": "order_billing_city_is",
+      "description": "Checks if the order's billing city matches a specific value.",
+      "data_field": "order.billingAddress.city",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_billing_city_is_not",
+      "description": "Checks if the order's billing city does not match a specific value.",
+      "data_field": "order.billingAddress.city",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_billing_province_is",
+      "description": "Checks if the order's billing province matches a specific value.",
+      "data_field": "order.billingAddress.province",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_billing_province_is_not",
+      "description": "Checks if the order's billing province does not match a specific value.",
+      "data_field": "order.billingAddress.province",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_financial_status_is",
+      "description": "Checks if the order's financial status matches a specific value (e.g., 'paid', 'pending', 'refunded').",
+      "data_field": "order.financialStatus",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_financial_status_is_not",
+      "description": "Checks if the order's financial status does not match a specific value.",
+      "data_field": "order.financialStatus",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_fulfillment_status_is",
+      "description": "Checks if the order's fulfillment status matches a specific value (e.g., 'fulfilled', 'partial', 'unfulfilled').",
+      "data_field": "order.fulfillmentStatus",
+      "logical_operator": "equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_fulfillment_status_is_not",
+      "description": "Checks if the order's fulfillment status does not match a specific value.",
+      "data_field": "order.fulfillmentStatus",
+      "logical_operator": "not_equal_to",
+      "value_type": "string"
+    },
+    {
+      "name": "order_tags_include",
+      "description": "Checks if the order's tags include a specific tag.",
+      "data_field": "order.tags",
+      "logical_operator": "at_least_one_of",
+      "value_type": "string",
+      "list_operator": "at_least_one_of"
+    },
+    {
+      "name": "order_tags_do_not_include",
+      "description": "Checks if the order's tags do not include a specific tag.",
+      "data_field": "order.tags",
+      "logical_operator": "not_any_of",
+      "value_type": "string",
+      "list_operator": "none_of"
+    }
+  ]
+}
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_conditions.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_get_data_and_syntax.json ---
+
+{
+    "workflow_features": {
+      "overview": {
+        "description": "This section describes how to build a workflow using multiple conditions and actions to a trigger that runs when an event happens, including scheduled time triggers, Get data actions, and For each loops."
+      },
+      "scheduled_time_trigger": {
+        "description": "Starts a workflow at a specific time and date, and can be set to repeat periodically (hourly, daily, weekly, monthly)."
+      },
+      "get_data_actions": {
+        "description": "Retrieve data from your store to be used within workflows. These actions allow querying different types of data such as customers, orders, products, and more.",
+        "actions": [
+          "Get collection data",
+          "Get customer data",
+          "Get draft order data",
+          "Get fulfillment order data",
+          "Get order data",
+          "Get product data",
+          "Get product variant data",
+          "Get subscription contract data"
+        ],
+        "liquid_tags": {
+          "description": "When using a Get data action with dates, you can use the date_minus and date_plus Liquid tags to change dates in your query."
+        }
+      },
+      "loops": {
+        "description": "When Get data actions return a list, you can use the For each action to iterate over each item in the list and apply conditions or actions to each item."
+      },
+      "aggregation_actions": {
+        "description": "Used to calculate and aggregate data from lists, such as counting the number of items or summing the values in a list.",
+        "actions": [
+          "Count",
+          "Sum"
+        ]
+      },
+      "known_limitations": {
+        "description": "There are certain limitations to these features, such as maximum list size (100 items), frequency of trigger execution (every 10 minutes), and one action per loop iteration."
+      }
+    },
+    "advanced_workflows": {
+      "examples": [
+        {
+          "title": "Send a daily summary of unfulfilled orders",
+          "description": "This workflow uses the Scheduled time trigger to run every day, retrieves unfulfilled orders, and sends a daily summary email.",
+          "steps": [
+            "Use Get order data",
+            "Apply For each loop to add a tag to each order",
+            "Send email summary"
+          ]
+        },
+        {
+          "title": "Send weekly email summary of low stock variants",
+          "description": "Runs weekly, retrieves low stock product variants, and sends an email summary with variant details.",
+          "steps": [
+            "Use Get product variant data",
+            "Apply Count and Sum actions",
+            "Send email summary"
+          ]
+        },
+        {
+          "title": "Add products with a tag to a collection in the future",
+          "description": "At a future time, fetch products with a specific tag and add them to a collection.",
+          "steps": [
+            "Use Get product data",
+            "Apply Scheduled time trigger",
+            "Add products to a collection"
+          ]
+        },
+        {
+          "title": "Track product variants that are on sale using a product metafield",
+          "description": "Sets a metafield on products if at least one variant is on sale.",
+          "steps": [
+            "Use Get product variant data",
+            "Apply conditions and update metafield"
+          ]
+        }
+      ]
+    },
+    "get_data_actions_details": {
+      "get_collection_data": {
+        "description": "Fetches collection information based on a query.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_customer_data": {
+        "description": "Retrieves customer data based on a query.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_draft_order_data": {
+        "description": "Fetches draft order information.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_fulfillment_order_data": {
+        "description": "Retrieves fulfillment order data.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "status:ON_HOLD"
+      },
+      "get_order_data": {
+        "description": "Fetches order data from your store.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_product_data": {
+        "description": "Fetches product data based on a query.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_product_variant_data": {
+        "description": "Retrieves product variant data.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_subscription_contract_data": {
+        "description": "Fetches subscription contract data.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "status:ACTIVE"
+      }
+    },
+    "shopify_api_search_syntax": {
+      "overview": {
+        "description": "This page provides information on the syntax for searching text fields across Shopify interfaces including storefront, admin, mobile apps, and various APIs (GraphQL Admin API, Storefront API, etc.)."
+      },
+      "query_grammar": {
+        "description": "A string query is made up of terms, connectives, modifiers, and comparators. The search grammar is expressed similarly to EBNF and uses terminal symbols like whitespace, name, and value.",
+        "example": "query=John Smith",
+        "whitespace": "Any sequence of space, tab, or newline characters.",
+        "name": "Any sequence of non-whitespace, non-special characters.",
+        "value": "Any name or quoted string (single or double quotes). Date values must be a string surrounded by quotes."
+      },
+      "connectives": {
+        "description": "Connectives combine multiple terms in a query. If not specified, AND is implied.",
+        "options": ["AND", "OR"],
+        "default": "AND",
+        "example": "query=state:enabled OR state:disabled"
+      },
+      "terms": {
+        "description": "A term is a query element consisting of a name, comparator, and value. Terms can include optional modifiers and subqueries.",
+        "example": "query=-first_name:Bob AND orders_count:>3 orders_count:<=4"
+      },
+      "modifiers": {
+        "description": "Modifiers negate a query or term.",
+        "options": ["-", "NOT"],
+        "example": "query=-first_name:Bob"
+      },
+      "comparators": {
+        "description": "Comparators define the relationship between a field and its value.",
+        "options": [":", ":<", ":>", ":<=", ":>="],
+        "example": "query=orders_count:>3"
+      },
+      "special_characters": {
+        "description": "Special characters serve specific functions and need to be escaped with a backslash. For example, : \\\\ ( ). Names can include characters like '-', '\\'', and '\\\"' but can't start with them.",
+        "example": "query=name:example\\-field"
+      },
+      "search_syntax_types": {
+        "field_search": {
+          "description": "Searches a specific field for a term.",
+          "example": "query=first_name:Bob age:27"
+        },
+        "default_search": {
+          "description": "A case-insensitive search across all fields.",
+          "example": "query=Bob Norman"
+        },
+        "range_search": {
+          "description": "Searches for values within a range (using operators >, >=, <, and <=).",
+          "example": "query=orders_count:>16 orders_count:<=30"
+        },
+        "not_query": {
+          "description": "Excludes specific terms from the search.",
+          "example": "query=-bob"
+        },
+        "boolean_operators": {
+          "description": "Combine terms using logic operators.",
+          "example": "query=bob OR norman AND Shopify"
+        },
+        "grouping": {
+          "description": "Group terms using parentheses for subqueries.",
+          "example": "query=state:disabled AND (\"sale shopper\" OR VIP)"
+        },
+        "phrase_query": {
+          "description": "Search for exact phrases using double quotes.",
+          "example": "query=first_name:\"Bob Norman\""
+        },
+        "prefix_query": {
+          "description": "Search for terms that begin with specified characters using wildcard *.",
+          "example": "query=norm*"
+        },
+        "exists_query": {
+          "description": "Search for non-null values in a field.",
+          "example": "query=published_at:*"
+        }
+      }
+    }
+  }
+  
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_get_data_and_syntax.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_liquid_variables.json ---
+
+{
+  "description": "Liquid variables in Shopify Flow are placeholders that dynamically populate with values when a workflow runs. These variables represent attributes of resources such as customers, orders, products, and more. Liquid is used to manipulate data and create dynamic content within workflows. The variables help you reference the attributes of resources involved in the workflow, providing flexibility and control over the execution and output of the workflow.",
+
+  "liquid_variables": {
+    "order": [
+      {
+        "name": "order.name",
+        "description": "The name of the order (e.g., #1001).",
+        "type": "string",
+        "example": "#1001"
+      },
+      {
+        "name": "order.totalPriceSet.shopMoney.amount",
+        "description": "The total price of the order in the shop's currency.",
+        "type": "number",
+        "example": "763.42"
+      },
+      {
+        "name": "order.customer.firstName",
+        "description": "The customer's first name.",
+        "type": "string",
+        "example": "Jeanne"
+      },
+      {
+        "name": "order.customer.lastName",
+        "description": "The customer's last name.",
+        "type": "string",
+        "example": "Dupont"
+      },
+      {
+        "name": "order.customer.email",
+        "description": "The customer's email address.",
+        "type": "string",
+        "example": "jeanne@example.com"
+      }
+    ],
+    "customer": [
+      {
+        "name": "customer.firstName",
+        "description": "The customer's first name.",
+        "type": "string",
+        "example": "Jeanne"
+      },
+      {
+        "name": "customer.lastName",
+        "description": "The customer's last name.",
+        "type": "string",
+        "example": "Dupont"
+      },
+      {
+        "name": "customer.email",
+        "description": "The customer's email address.",
+        "type": "string",
+        "example": "jeanne@example.com"
+      }
+    ],
+    "product": [
+      {
+        "name": "product.title",
+        "description": "The title of the product.",
+        "type": "string",
+        "example": "High Waist Leggings - Black"
+      },
+      {
+        "name": "product.tags",
+        "description": "A list of tags associated with the product.",
+        "type": "list",
+        "example": "[\"color:red\", \"color:orange\"]"
+      }
+    ],
+    "shop": [
+      {
+        "name": "shop.myShopifyDomain",
+        "description": "The shop's myshopify domain (e.g., your-store.myshopify.com).",
+        "type": "string",
+        "example": "your-store.myshopify.com"
+      }
+    ],
+    "productVariant": [
+      {
+        "name": "productVariant.legacyResourceId",
+        "description": "The product variant's legacy resource ID.",
+        "type": "string",
+        "example": "1234567890"
+      }
+    ]
+  },
+
+  "liquid_tags": [
+    "if",
+    "unless",
+    "elsif",
+    "else",
+    "case",
+    "when",
+    "for",
+    "cycle",
+    "tablerow"
+  ],
+
+  "liquid_filters": [
+    "size",
+    "remove",
+    "remove_first",
+    "strip",
+    "replace",
+    "date_minus",
+    "date_plus"
+  ],
+
+  "examples": [
+    {
+      "description": "Output URLs for resources",
+      "example": "# Output the base Admin URL for your store\nhttps://admin.shopify.com/store/{{ shop.myShopifyDomain | replace: \".myshopify.com\", \"\" }}\n\n# Customer from an Order trigger:\n{{ base_url }}/customers/{{ order.customer.legacyResourceId }}"
+    },
+    {
+      "description": "Convert a list of tags to a metafield",
+      "example": "{% capture mf_value %}\n{%- for tags_item in product.tags -%}\n{%- if tags_item contains \"color:\" -%}\n\"{{- tags_item | remove_first: \"color:\" | strip -}}\",\n{%- endif -%}\n{%- endfor -%}\n{% endcapture -%}\n[{{mf_value | remove_last: \",\"}}]"
+    },
+    {
+      "description": "Write a dynamic email message for an order",
+      "example": "Please send a personal thank you note to {{ order.customer.firstName }} {{ order.customer.lastName }}({{ order.customer.email }}) for placing an order for $ {{ order.totalPriceSet.shopMoney.amount }}."
+    }
+  ],
+
+  "complex_data_objects": {
+    "lineItems": [
+      {
+        "contract": {
+          "id": "{{ li.contract.id | json }}"
+        },
+        "customAttributes": [
+          {
+            "key": "{{ ca.key | json }}",
+            "value": "{{ ca.value | json }}"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_liquid_variables.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_metafield_actions.json ---
+
+{
+  "description": "Metafield actions allow you to add or update metafields for various Shopify resources such as collections, company locations, products, and more. These actions help manage custom data for your resources in Shopify, making it possible to extend functionality with custom fields that can be updated and referenced within workflows.",
+  
+  "metafield_actions": [
+    {
+      "name": "update_collection_metafield",
+      "description": "Adds or updates a metafield on a collection.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "collection_created"
+      ],
+      "example": {
+        "description": "Example of adding or updating a metafield for a collection when it's created. You can set the value of a metafield on the collection to store additional data like custom information."
+      }
+    },
+    {
+      "name": "update_company_location_metafield",
+      "description": "Adds or updates a metafield on a company location.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "company_location_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a company location when it's created. For example, you could store location-specific information like 'warehouse' or 'headquarters' in a custom metafield."
+      }
+    },
+    {
+      "name": "update_company_metafield",
+      "description": "Adds or updates a metafield on a company.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "company_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a company when it's created. You can use this action to track information about a company, such as custom attributes or external identifiers."
+      }
+    },
+    {
+      "name": "update_customer_metafield",
+      "description": "Adds or updates a metafield on a customer.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "customer_account_disabled",
+        "customer_account_enabled",
+        "customer_created",
+        "draft_order_created",
+        "order_cancelled",
+        "order_created",
+        "order_fulfilled",
+        "order_paid",
+        "order_risk_analyzed",
+        "order_transaction_created",
+        "fulfillment_created",
+        "fulfillment_event_created",
+        "refund_created",
+        "tender_transaction_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a customer. For example, you can store customer-specific information, such as loyalty program status or a custom identifier."
+      }
+    },
+    {
+      "name": "update_order_metafield",
+      "description": "Adds or updates a metafield on an order.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "order_cancelled",
+        "order_created",
+        "order_fulfilled",
+        "order_paid",
+        "order_risk_analyzed",
+        "order_transaction_created",
+        "fulfillment_created",
+        "fulfillment_event_created",
+        "refund_created",
+        "tender_transaction_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for an order. For example, you might use this action to track custom information about orders, like delivery preferences or custom packing instructions."
+      }
+    },
+    {
+      "name": "update_product_metafield",
+      "description": "Adds or updates a metafield on a product.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "product_created",
+        "product_status_updated",
+        "product_variant_added",
+        "product_variant_inventory_quantity_changed",
+        "product_variant_back_in_stock",
+        "product_variant_out_of_stock",
+        "inventory_item_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a product. You can use it to store additional data such as product specifications, special handling instructions, or related marketing information."
+      }
+    },
+    {
+      "name": "update_product_variant_metafield",
+      "description": "Adds or updates a metafield on a product variant.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "product_variant_inventory_quantity_changed",
+        "product_variant_added",
+        "product_variant_back_in_stock",
+        "product_variant_out_of_stock"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a product variant. For example, you could store variant-specific data like color or size information for easier filtering."
+      }
+    },
+    {
+      "name": "update_shop_metafield",
+      "description": "Adds or updates a metafield on a shop.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "any"
+      ],
+      "example": {
+        "description": "This action allows you to add or update a metafield for the shop. You could use this to store shop-wide information, such as settings, configurations, or other global data."
+      }
+    },
+    {
+      "name": "create_metafield_definition",
+      "description": "Creates a new metafield definition.",
+      "category": "metafield",
+      "fields": {
+        "name": {
+          "type": "string",
+          "description": "The name of the metafield definition."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield definition."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield definition."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield definition (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "any"
+      ],
+      "example": {
+        "description": "This action is used to create a new metafield definition. For instance, you can define a new metafield for products or orders to capture specific information like custom attributes."
+      }
+    }
+  ]
+}
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_metafield_actions.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_prompt.json ---
+
+{
+    "prompt": "# Shopify Flow Generator\nYou are an expert in creating Shopify Flow automations. Your task is to generate a workflow based on the user's description and follow a set of strict rules.\n\n## Rules for Shopify Flow Generation:\n1. **Trigger**: Always start with a trigger. The trigger must:\n   - Be one of the available Shopify Flow triggers.\n   - Match the user's description as closely as possible.\n\n2. **Conditions**: A flow can include multiple conditions. Each condition must:\n   - Align with the data points extracted from the user’s description.\n   - Include default values (e.g., `500` for `order_total`) if any inputs are missing.\n\n3. **Actions**: A flow can have multiple actions. Each action must:\n   - Be relevant to the described process.\n   - Use parameters consistent with Shopify Flow documentation.\n\n4. **Strict Format**: The response must strictly adhere to this JSON format:\n```json\n{\n   \"trigger\": {\n       \"name\": \"<trigger_name>\",\n       \"parameters\": {\n           \"<parameter_key>\": \"<parameter_value>\"\n       }\n   },\n   \"conditions\": [\n       {\n           \"name\": \"<condition_name>\",\n           \"parameters\": {\n               \"<parameter_key>\": \"<parameter_value>\"\n           }\n       }\n   ],\n   \"actions\": [\n       {\n           \"name\": \"<action_name>\",\n           \"parameters\": {\n               \"<parameter_key>\": \"<parameter_value>\"\n           }\n       }\n   ],\n   \"explanation\": {\n       \"trigger\": \"<explanation_of_trigger>\",\n       \"conditions\": [\n           \"<explanation_of_first_condition>\",\n           \"<explanation_of_second_condition>\"\n       ],\n       \"actions\": [\n           \"<explanation_of_first_action>\",\n           \"<explanation_of_second_action>\"\n       ]\n   }\n}\n```\n\n5. **Validation**: If the response does not include all required keys (`trigger`, `conditions`, `actions`, `explanation`), return an error.\n\n6. **Edge Cases**: If any essential details are missing, use safe defaults (e.g., `order_total: 500`, `tag: 'VIP'`).\n\n7. **Completion**: Return the response strictly in JSON format without additional text.\n\n## User Description:\n{description}\n\n## Your Response (strictly JSON):"
+  }
+  
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_prompt.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_send_http_request_action.json ---
+
+{
+  "name": "send_http_request",
+  "description": "Sends an HTTP request to a web server or URL.",
+  "category": "webhook",
+  
+  "overview": {
+    "description": "The Send HTTP Request action connects your workflow to an external service, allowing you to trigger HTTP requests from your store. It supports several HTTP methods and can be used to integrate with third-party APIs or webhooks."
+  },
+  
+  "fields": {
+    "method": {
+      "description": "Specifies the HTTP method (e.g., GET, POST, PUT) to use for the request.",
+      "options": [
+        "GET",
+        "DELETE",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "PUT",
+        "POST"
+      ]
+    },
+    "url": {
+      "description": "The URL of the server that will receive the HTTP request."
+    },
+    "headers": {
+      "description": "Custom headers to include in the HTTP request, such as 'Content-Type'. This allows you to configure your request with necessary metadata."
+    },
+    "body": {
+      "description": "The payload to send along with the request. For POST or PUT requests, this is the body of the request, typically in JSON or form format."
+    }
+  },
+
+  "triggers": {
+    "description": "The Send HTTP Request action can be used with any workflow trigger."
+  },
+
+  "response_codes": {
+    "success": {
+      "description": "HTTP response codes from the 2XX or 3XX range indicate a successful request. The workflow will continue executing subsequent actions.",
+      "codes": [
+        200, 201, 202, 204, 301, 302, 304, 307, 308
+      ]
+    },
+    "retry": {
+      "description": "Flow will retry the HTTP request if a 429 or 5XX response code is returned. This retry process continues for up to 24 hours until a different response code is received or the retry limit is reached.",
+      "codes": [
+        429, 500, 502, 503, 504
+      ]
+    },
+    "fail": {
+      "description": "If the HTTP request returns an unrecognized code or times out after retries, the workflow will fail and no further actions will be taken.",
+      "codes": ["other"]
+    }
+  },
+
+  "limitations": {
+    "description": "The Send HTTP request action does not return any data from the server's response. If you need to capture response data, consider using other Shopify actions like the 'Send Admin API Request'."
+  },
+
+  "templates": {
+    "notify_fulfillment_provider": {
+      "description": "This template sends an HTTP request to a fulfillment provider when orders are tagged as 'Warehouse' in Order Tagger. It includes order details in the request for processing by the fulfillment provider."
+    }
+  },
+
+  "example": {
+    "description": "This example demonstrates how to use the Send HTTP Request action to send a POST request to an external service when a product status is updated.",
+    "steps": [
+      "1. Set up a web service to receive HTTP requests, such as 'Request Catcher'.",
+      "2. Select the 'Product status updated' trigger in Shopify Flow.",
+      "3. Add the 'Send HTTP Request' action and configure the following fields:",
+      "   - HTTP Method: POST",
+      "   - URL: https://shopifyflow.requestcatcher.com/test",
+      "   - Headers: Content-Type: text/plain",
+      "   - Body: Include the product title and updated status.",
+      "4. Activate the workflow.",
+      "5. Test the workflow by changing the status of a product (e.g., from 'Draft' to 'Active').",
+      "6. Check the results in the external testing service (Request Catcher)."
+    ]
+  }
+}
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_send_http_request_action.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_triggers.json ---
+
+{
+  "description": "Triggers in Shopify Flow are events that start a workflow. Once a trigger is selected, you can set actions to execute immediately or conditions to determine which actions should run.",
+  "triggers": {
+    "collection": [
+      {
+        "name": "collection_created",
+        "description": "Triggered when a new collection is created in the store."
+      },
+      {
+        "name": "collection_deleted",
+        "description": "Triggered when a collection is deleted from the store."
+      }
+    ],
+    "company": [
+      {
+        "name": "company_contact_assigned_permission",
+        "description": "Triggered when a company contact is assigned a permission."
+      },
+      {
+        "name": "company_contact_created",
+        "description": "Triggered when a company contact is created."
+      },
+      {
+        "name": "company_created",
+        "description": "Triggered when a company is created."
+      },
+      {
+        "name": "company_location_created",
+        "description": "Triggered when a company location is created."
+      }
+    ],
+    "customer": [
+      {
+        "name": "customer_joined_segment",
+        "description": "Triggered when a customer joins a segment."
+      },
+      {
+        "name": "customer_abandons_checkout",
+        "description": "Triggered when a customer abandons their checkout."
+      },
+      {
+        "name": "customer_account_disabled",
+        "description": "Triggered when a customer account is disabled."
+      },
+      {
+        "name": "customer_account_enabled",
+        "description": "Triggered when a customer account is enabled."
+      },
+      {
+        "name": "customer_created",
+        "description": "Triggered when a new customer account is created."
+      },
+      {
+        "name": "customer_deleted",
+        "description": "Triggered when a customer is deleted."
+      },
+      {
+        "name": "customer_left_online_store_without_making_a_purchase",
+        "description": "Triggered when a customer leaves the online store without making a purchase."
+      },
+      {
+        "name": "customer_payment_method_created",
+        "description": "Triggered when a customer payment method is created."
+      },
+      {
+        "name": "customer_payment_method_revoked",
+        "description": "Triggered when a customer payment method is revoked."
+      },
+      {
+        "name": "customer_payment_method_updated",
+        "description": "Triggered when a customer payment method is updated."
+      },
+      {
+        "name": "customer_subscribed_to_email_marketing",
+        "description": "Triggered when a customer subscribes to email marketing."
+      },
+      {
+        "name": "customer_tags_added",
+        "description": "Triggered when tags are added to a customer."
+      },
+      {
+        "name": "customer_tags_removed",
+        "description": "Triggered when tags are removed from a customer."
+      }
+    ],
+    "draft_order": [
+      {
+        "name": "draft_order_created",
+        "description": "Triggered when a draft order is created."
+      },
+      {
+        "name": "draft_order_deleted",
+        "description": "Triggered when a draft order is deleted."
+      }
+    ],
+    "fulfillment": [
+      {
+        "name": "fulfillment_created",
+        "description": "Triggered when a fulfillment is created."
+      },
+      {
+        "name": "fulfillment_event_created",
+        "description": "Triggered when a fulfillment event is created."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_cancellation_request_accepted",
+        "description": "Triggered when a fulfillment order fulfillment cancellation request is accepted."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_cancellation_request_rejected",
+        "description": "Triggered when a fulfillment order fulfillment cancellation request is rejected."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_cancellation_request_submitted",
+        "description": "Triggered when a fulfillment order fulfillment cancellation request is submitted."
+      },
+      {
+        "name": "fulfillment_order_canceled",
+        "description": "Triggered when a fulfillment order is canceled."
+      },
+      {
+        "name": "fulfillment_order_holds_released",
+        "description": "Triggered when fulfillment order holds are released."
+      },
+      {
+        "name": "fulfillment_order_placed_on_hold",
+        "description": "Triggered when a fulfillment order is placed on hold."
+      },
+      {
+        "name": "fulfillment_order_line_items_prepared_for_local_delivery",
+        "description": "Triggered when fulfillment order line items are prepared for local delivery."
+      },
+      {
+        "name": "fulfillment_order_line_items_prepared_for_pickup",
+        "description": "Triggered when fulfillment order line items are prepared for pickup."
+      },
+      {
+        "name": "fulfillment_order_merged",
+        "description": "Triggered when a fulfillment order is merged."
+      },
+      {
+        "name": "fulfillment_order_moved",
+        "description": "Triggered when a fulfillment order is moved."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_request_accepted",
+        "description": "Triggered when a fulfillment order fulfillment request is accepted."
+      },
+      {
+        "name": "fulfillment_order_ready_to_fulfill",
+        "description": "Triggered when a fulfillment order is ready to fulfill."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_request_rejected",
+        "description": "Triggered when a fulfillment order fulfillment request is rejected."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_request_submitted",
+        "description": "Triggered when a fulfillment order fulfillment request is submitted."
+      },
+      {
+        "name": "fulfillment_order_rescheduled",
+        "description": "Triggered when a fulfillment order is rescheduled."
+      },
+      {
+        "name": "fulfillment_order_fulfillment_service_failed_to_complete_fulfillment",
+        "description": "Triggered when a fulfillment order fulfillment service fails to complete fulfillment."
+      }
+    ],
+    "inventory": [
+      {
+        "name": "inventory_item_created",
+        "description": "Triggered when an inventory item is created."
+      },
+      {
+        "name": "inventory_item_deleted",
+        "description": "Triggered when an inventory item is deleted."
+      }
+    ],
+    "metaobject": [
+      {
+        "name": "metaobject_entry_created",
+        "description": "Triggered when a metaobject entry is created."
+      }
+    ],
+    "order": [
+      {
+        "name": "order_canceled",
+        "description": "Triggered when an order is canceled."
+      },
+      {
+        "name": "order_created",
+        "description": "Triggered when a new order is created."
+      },
+      {
+        "name": "order_deleted",
+        "description": "Triggered when an order is deleted."
+      },
+      {
+        "name": "order_fulfilled",
+        "description": "Triggered when an order is fulfilled."
+      },
+      {
+        "name": "order_paid",
+        "description": "Triggered when an order is paid."
+      },
+      {
+        "name": "order_risk_analyzed",
+        "description": "Triggered when an order's risk is analyzed."
+      },
+      {
+        "name": "order_transaction_created",
+        "description": "Triggered when an order transaction is created."
+      }
+    ],
+    "payment": [
+      {
+        "name": "payment_schedule_is_due",
+        "description": "Triggered when a payment schedule is due."
+      }
+    ],
+    "product": [
+      {
+        "name": "product_created",
+        "description": "Triggered when a new product is created."
+      },
+      {
+        "name": "product_deleted",
+        "description": "Triggered when a product is deleted."
+      },
+      {
+        "name": "product_status_updated",
+        "description": "Triggered when a product's status is updated."
+      },
+      {
+        "name": "product_variant_added",
+        "description": "Triggered when a product variant is added."
+      },
+      {
+        "name": "product_variant_deleted",
+        "description": "Triggered when a product variant is deleted."
+      },
+      {
+        "name": "product_variant_back_in_stock",
+        "description": "Triggered when a product variant is back in stock."
+      },
+      {
+        "name": "product_variant_out_of_stock",
+        "description": "Triggered when a product variant is out of stock."
+      },
+      {
+        "name": "product_variant_inventory_quantity_changed",
+        "description": "Triggered when a product variant's inventory quantity changes."
+      }
+    ],
+    "refund": [
+      {
+        "name": "refund_created",
+        "description": "Triggered when a refund is created."
+      }
+    ],
+    "return": [
+      {
+        "name": "return_approved",
+        "description": "Triggered when a return is approved."
+      },
+      {
+        "name": "return_cancelled",
+        "description": "Triggered when a return is cancelled."
+      },
+      {
+        "name": "return_closed",
+        "description": "Triggered when a return is closed."
+      },
+      {
+        "name": "return_declined",
+        "description": "Triggered when a return is declined."
+      },
+      {
+        "name": "return_reopened",
+        "description": "Triggered when a return is reopened."
+      },
+      {
+        "name": "return_requested",
+        "description": "Triggered when a return is requested."
+      }
+    ],
+    "scheduled": [
+      {
+        "name": "scheduled_time",
+        "description": "Triggered at a scheduled time."
+      }
+    ],
+    "selling_plan": [
+      {
+        "name": "selling_plan_group_created",
+        "description": "Triggered when a selling plan group is created."
+      },
+      {
+        "name": "selling_plan_group_deleted",
+        "description": "Triggered when a selling plan group is deleted."
+      },
+      {
+        "name": "selling_plan_group_updated",
+        "description": "Triggered when a selling plan group is updated."
+      }
+    ],
+    "subscription": [
+      {
+        "name": "subscription_billing_attempt_challenged",
+        "description": "Triggered when a subscription billing attempt is challenged."
+      },
+      {
+        "name": "subscription_billing_attempt_failure",
+        "description": "Triggered when a subscription billing attempt fails."
+      },
+      {
+        "name": "subscription_billing_attempt_success",
+        "description": "Triggered when a subscription billing attempt succeeds."
+      },
+      {
+        "name": "subscription_contract_created",
+        "description": "Triggered when a subscription contract is created."
+      },
+      {
+        "name": "subscription_contract_updated",
+        "description": "Triggered when a subscription contract is updated."
+      }
+    ],
+    "tender_transaction": [
+      {
+        "name": "tender_transaction_created",
+        "description": "Triggered when a tender transaction is created."
+      }
+    ],
+    "workflow": [
+      {
+        "name": "workflow_error_occurred",
+        "description": "Triggered when a workflow error occurs."
+      }
+    ]
+  }
+}
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_triggers.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_troubleshooting_and_manual_execution.json ---
+
+{
+    "workflow_troubleshooting": {
+      "overview": {
+        "description": "This section outlines troubleshooting strategies for Shopify Flow workflows, including retrying workflows, manually running workflows, and handling errors during execution."
+      },
+      "retrying_workflows": {
+        "considerations": {
+          "workflow_running": "A workflow cannot still be running or waiting. It must either be successful or have errors before retrying.",
+          "workflow_active": "The associated workflow must be active. If inactive, navigate to the workflow summary page and click 'Turn on'.",
+          "trigger_match": "The workflow trigger must match the trigger used by the original run. If the trigger is changed, retrying will not be possible.",
+          "trigger_data": "Retrying will use the same trigger data as the original run (e.g., resource ID).",
+          "up_to_date_data": "Retrying will fetch the latest data from 'Get data' actions, ensuring the conditions and actions use up-to-date data."
+        },
+        "steps": {
+          "retry_from_run_details": {
+            "description": "Retry a workflow run by navigating to the Run details page and following the retry prompts.",
+            "steps": [
+              "Click the link in your workflow error notification or navigate to the run in the Flow app.",
+              "Troubleshoot the run to identify any issues and check the workflow configuration.",
+              "Fix the identified issues in the workflow and resources.",
+              "Return to the Run details page and click 'Retry run'."
+            ]
+          },
+          "retry_from_workflow_summary": {
+            "description": "Retry multiple workflow runs from the Workflow summary page.",
+            "steps": [
+              "Select a workflow from the list to navigate to the summary page.",
+              "View the details of runs to determine the issue that needs fixing.",
+              "Fix the issue in the workflow and related resources.",
+              "Select all impacted runs and click 'Retry runs' from the action menu."
+            ]
+          },
+          "view_retry_status": {
+            "description": "View the status of retries from the Run details or Workflow summary pages.",
+            "steps": [
+              "Check the Retries column to see if a run has been retried.",
+              "Click the retry icon to filter the list of original runs and retries."
+            ]
+          }
+        }
+      },
+      "manual_workflow_execution": {
+        "overview": {
+          "description": "Running workflows manually in Shopify Flow can be helpful for troubleshooting, creating workflows, and processing resources in bulk. It allows workflows to be run even if the event triggering the workflow has already passed."
+        },
+        "considerations": {
+          "workflow_active": "The workflow must be active to run it manually. Inactive workflows must be activated first.",
+          "trigger_match": "The workflow trigger must match the resource type you're working with (e.g., 'Order created' for orders).",
+          "flow_app_installed": "The Shopify Flow app must be installed in your store to run workflows manually."
+        },
+        "steps": {
+          "run_workflow_from_admin": {
+            "description": "Manually run a workflow from the Shopify admin on an individual resource.",
+            "steps": [
+              "From Shopify Admin, go to the relevant resource (e.g., Orders, Draft orders, Products, Customers).",
+              "Click the resource to run the workflow on.",
+              "Click 'More actions' and select 'Run Flow automation'.",
+              "In the Automate with Flow page, select the workflow to run.",
+              "Click 'Run workflow' and optionally click 'View results in Flow' to review the outcome."
+            ]
+          },
+          "run_workflow_with_bulk_action": {
+            "description": "Manually run a workflow on multiple resources at once using a bulk action.",
+            "steps": [
+              "From Shopify Admin, go to the relevant resource page.",
+              "Select the resources to apply the workflow to (up to 50 by default).",
+              "Click the '...' button and select 'Run Flow automation'.",
+              "In the Automate with Flow page, select the workflow to run.",
+              "Click 'Run workflow' and optionally click 'View results in Flow' to review the outcome."
+            ],
+            "bulk_action_considerations": {
+              "limit_50": "By default, the bulk action supports a maximum of 50 resources. To increase the limit to 250, append ?limit=250 to the page URL.",
+              "filter_results": "You can combine ?limit=250 with filters like '&product_type=example' to refine the list of resources."
+            }
+          }
+        }
+      },
+      "bulk_actions": {
+        "overview": {
+          "description": "Bulk actions allow you to perform tasks on multiple items simultaneously in Shopify Admin, such as fulfilling orders, deleting files, and publishing products."
+        },
+        "select_items_to_edit_in_bulk": {
+          "steps": [
+            "Click Orders, Products, Customers, or Discounts in Shopify Admin.",
+            "Select items one by one or in a range using the shift key, or select all items on a page by clicking the checkbox at the top of the list.",
+            "For bulk editing, click 'Select all in this store' to select all items across your store."
+          ]
+        },
+        "choose_bulk_action": {
+          "steps": [
+            "Select the list items you want to perform a bulk action on.",
+            "Click the bulk action name and complete the necessary steps.",
+            "For deletions, confirm your choice by clicking 'Delete'."
+          ]
+        },
+        "list_of_bulk_actions": {
+          "description": "Here are some of the available bulk actions in Shopify Admin for different resource pages.",
+          "actions": {
+            "orders": [
+              "Create and edit shipping labels",
+              "Fulfill orders",
+              "Capture order payments",
+              "Print packing slips",
+              "Archive orders",
+              "Unarchive orders",
+              "Add/remove tags",
+              "Run automated workflows (requires Shopify Flow)"
+            ],
+            "products": [
+              "Make products available/unavailable",
+              "Delete selected products",
+              "Add/remove tags",
+              "Add/remove collections",
+              "Run automated workflows (requires Shopify Flow)"
+            ],
+            "customers": [
+              "Delete selected customers",
+              "Add/remove tags",
+              "Run automated workflows (requires Shopify Flow)"
+            ],
+            "discounts": [
+              "Activate/deactivate discounts",
+              "Delete discounts"
+            ]
+          }
+        }
+      },
+      "workflow_monitoring": {
+        "overview": {
+          "description": "After running a workflow, you can monitor its performance and review any issues using various monitoring tools within the Shopify Flow app."
+        },
+        "steps": {
+          "view_recent_runs": {
+            "description": "View all workflow runs from Shopify Admin > Apps > Flow, or open a specific workflow to review its runs.",
+            "steps": [
+              "Click 'Recent runs' to view all workflow runs.",
+              "Click a run to view the details of its execution."
+            ]
+          },
+          "workflow_status": {
+            "description": "Workflows can have different statuses, such as running, waiting, succeeded with actions, or has errors. Review these statuses to diagnose workflow issues."
+          },
+          "search_for_workflow_runs": {
+            "steps": [
+              "Search by workflow ID or resource trigger parameters.",
+              "Use the Time filter to narrow down search results and view runs within a specific time window."
+            ]
+          }
+        }
+      },
+      "common_errors": {
+        "overview": {
+          "description": "Understanding common errors in Shopify Flow can help you troubleshoot and resolve issues quickly."
+        },
+        "types_of_errors": {
+          "transient_errors": {
+            "description": "Temporary errors that are retried until success or timeout. Typically occurs with partner connections or network issues."
+          },
+          "permanent_errors": {
+            "description": "Errors that prevent the task from running and cannot be retried. Examples include missing resources or invalid data."
+          },
+          "example_errors": [
+            {
+              "error_type": "Step timed out",
+              "cause": "Workflow tasks may take too long to execute, often due to large data sets."
+            },
+            {
+              "error_type": "GraphQL throttled",
+              "cause": "Excessive API usage due to complex workflows or data processing."
+            }
+          ]
+        }
+      }
+    }
+  }
+  
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/data/shopify_flow_troubleshooting_and_manual_execution.json ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/.env ---
+
+OPENAI_API_KEY=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
+
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/.env ---
+
+
+--- START OF /Users/damionrashford/shopify-flow-builder/ai-backend/index.js ---
+
+import express, { json } from "express";
+import axios from "axios";
+import { config } from "dotenv";
+import cors from "cors";
+import { encoding_for_model } from "tiktoken"; // Import tiktoken for token counting
+
+// Import JSON files
+import emptyWorkflow from "./data/empty_workflow.json" assert { type: "json" };
+import shopifyFlowActions from "./data/shopify_flow_actions.json" assert { type: "json" };
+import shopifyFlowTriggers from "./data/shopify_flow_triggers.json" assert { type: "json" };
+import shopifyFlowPrompts from "./data/shopify_flow_prompt.json" assert { type: "json" };
+
+config();
+
+const app = express();
+const PORT = 5001;
+
+const MAX_TOKENS = 8192; // Token limit for GPT-4
+
+app.use(json());
+app.use(cors({ origin: "http://localhost:5173", methods: ["POST"] }));
+
+// Function to calculate token count
+const calculateTokenCount = (messages) => {
+  const enc = encoding_for_model("gpt-4");
+  const tokenCount = messages.reduce((total, message) => total + enc.encode(message.content).length, 0);
+  enc.free();
+  return tokenCount;
+};
+
+// Function to truncate messages while preserving user input
+const truncateMessages = (messages) => {
+  let tokenCount = calculateTokenCount(messages);
+  console.log(`[INFO] Initial Token Count: ${tokenCount}`);
+
+  // Truncate system messages starting from index 2
+  while (tokenCount > MAX_TOKENS) {
+    if (messages.length <= 2) {
+      console.warn("[WARN] Cannot truncate further without removing essential messages.");
+      break;
+    }
+    console.log("[ACTION] Truncating a system message to reduce token count...");
+    messages.splice(2, 1);
+    tokenCount = calculateTokenCount(messages);
+    console.log(`[INFO] New Token Count: ${tokenCount}`);
+  }
+
+  console.log(`[INFO] Final Token Count After Truncation: ${tokenCount}`);
+  return messages;
+};
+
+// Endpoint: /direct-ai
+app.post("/direct-ai", async (req, res) => {
+  const userMessage = req.body.message;
+
+  console.log("\n==> [START] Received request to /direct-ai <==");
+  console.log("[INFO] Request Payload:", JSON.stringify(req.body, null, 2));
+
+  if (!userMessage) {
+    console.error("\n[ERROR] Validation Error: 'message' field is missing.");
+    return res.status(400).json({ error: "Message is required" });
+  }
+
+  try {
+    // Construct messages array
+    let messages = [
+      { role: "system", content: "You are a helpful assistant for building Shopify flows. Ensure strict adherence to the specified JSON structure." },
+      { role: "system", content: `Empty Workflow: ${JSON.stringify(emptyWorkflow)}` },
+      { role: "system", content: `Flow Actions: ${JSON.stringify(shopifyFlowActions)}` },
+      { role: "system", content: `Flow Triggers: ${JSON.stringify(shopifyFlowTriggers)}` },
+      { role: "system", content: `Flow Prompt: ${JSON.stringify(shopifyFlowPrompts)}` },
+      { role: "user", content: userMessage },
+    ];
+
+    console.log("\n[INFO] Validating Token Count...");
+    messages = truncateMessages(messages);
+
+    console.log("\n[INFO] Requesting OpenAI API...");
+
+    // Call OpenAI API
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-4",
+        messages,
+        response_format: { type: "json_object" }, // Enforce strict JSON response
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const aiResponse = response.data.choices[0]?.message?.content;
+    console.log("\n[DEBUG] Raw AI Response:", aiResponse);
+
+    // Validate and parse the AI response
+    const parsedResponse = JSON.parse(aiResponse);
+
+    const { trigger, conditions, actions, explanation } = parsedResponse;
+
+    // Ensure all keys exist
+    if (!trigger || !conditions || !actions || !explanation) {
+      console.error("\n[ERROR] AI Response is missing required fields.");
+      return res.status(400).json({ error: "AI response does not include all required components." });
+    }
+
+    // Respond with validated structure
+    return res.json({
+      trigger,
+      conditions,
+      actions,
+      explanation,
+    });
+  } catch (error) {
+    console.error("\n[ERROR] Exception occurred during OpenAI API call:");
+    console.error(error.message);
+    return res.status(500).json({
+      error: "Failed to process AI response",
+      details: error.response?.data || error.message,
+    });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`\n==> Server is running on http://localhost:${PORT} <==`);
+});
+
+--- END OF /Users/damionrashford/shopify-flow-builder/ai-backend/index.js ---
+

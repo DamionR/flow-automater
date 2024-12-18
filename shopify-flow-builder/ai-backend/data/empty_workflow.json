@@ -1,0 +1,40 @@
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shopify Flow Workflow",
+  "type": "object",
+  "properties": {
+    "__metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["version"]
+    },
+    "root": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {}
+        },
+        "links": {
+          "type": "array",
+          "items": {}
+        },
+        "patched_fields": {
+          "type": "array",
+          "items": {}
+        },
+        "workflow_name": {
+          "type": "string"
+        }
+      },
+      "required": ["steps", "links", "patched_fields", "workflow_name"]
+    }
+  },
+  "required": ["__metadata", "root"]
+}

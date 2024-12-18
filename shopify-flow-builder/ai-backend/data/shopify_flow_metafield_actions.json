@@ -1,0 +1,298 @@
+{
+  "description": "Metafield actions allow you to add or update metafields for various Shopify resources such as collections, company locations, products, and more. These actions help manage custom data for your resources in Shopify, making it possible to extend functionality with custom fields that can be updated and referenced within workflows.",
+  
+  "metafield_actions": [
+    {
+      "name": "update_collection_metafield",
+      "description": "Adds or updates a metafield on a collection.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "collection_created"
+      ],
+      "example": {
+        "description": "Example of adding or updating a metafield for a collection when it's created. You can set the value of a metafield on the collection to store additional data like custom information."
+      }
+    },
+    {
+      "name": "update_company_location_metafield",
+      "description": "Adds or updates a metafield on a company location.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "company_location_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a company location when it's created. For example, you could store location-specific information like 'warehouse' or 'headquarters' in a custom metafield."
+      }
+    },
+    {
+      "name": "update_company_metafield",
+      "description": "Adds or updates a metafield on a company.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "company_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a company when it's created. You can use this action to track information about a company, such as custom attributes or external identifiers."
+      }
+    },
+    {
+      "name": "update_customer_metafield",
+      "description": "Adds or updates a metafield on a customer.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "customer_account_disabled",
+        "customer_account_enabled",
+        "customer_created",
+        "draft_order_created",
+        "order_cancelled",
+        "order_created",
+        "order_fulfilled",
+        "order_paid",
+        "order_risk_analyzed",
+        "order_transaction_created",
+        "fulfillment_created",
+        "fulfillment_event_created",
+        "refund_created",
+        "tender_transaction_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a customer. For example, you can store customer-specific information, such as loyalty program status or a custom identifier."
+      }
+    },
+    {
+      "name": "update_order_metafield",
+      "description": "Adds or updates a metafield on an order.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "order_cancelled",
+        "order_created",
+        "order_fulfilled",
+        "order_paid",
+        "order_risk_analyzed",
+        "order_transaction_created",
+        "fulfillment_created",
+        "fulfillment_event_created",
+        "refund_created",
+        "tender_transaction_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for an order. For example, you might use this action to track custom information about orders, like delivery preferences or custom packing instructions."
+      }
+    },
+    {
+      "name": "update_product_metafield",
+      "description": "Adds or updates a metafield on a product.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "product_created",
+        "product_status_updated",
+        "product_variant_added",
+        "product_variant_inventory_quantity_changed",
+        "product_variant_back_in_stock",
+        "product_variant_out_of_stock",
+        "inventory_item_created"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a product. You can use it to store additional data such as product specifications, special handling instructions, or related marketing information."
+      }
+    },
+    {
+      "name": "update_product_variant_metafield",
+      "description": "Adds or updates a metafield on a product variant.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "product_variant_inventory_quantity_changed",
+        "product_variant_added",
+        "product_variant_back_in_stock",
+        "product_variant_out_of_stock"
+      ],
+      "example": {
+        "description": "This action adds or updates a metafield for a product variant. For example, you could store variant-specific data like color or size information for easier filtering."
+      }
+    },
+    {
+      "name": "update_shop_metafield",
+      "description": "Adds or updates a metafield on a shop.",
+      "category": "metafield",
+      "fields": {
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the metafield."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "any"
+      ],
+      "example": {
+        "description": "This action allows you to add or update a metafield for the shop. You could use this to store shop-wide information, such as settings, configurations, or other global data."
+      }
+    },
+    {
+      "name": "create_metafield_definition",
+      "description": "Creates a new metafield definition.",
+      "category": "metafield",
+      "fields": {
+        "name": {
+          "type": "string",
+          "description": "The name of the metafield definition."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "The namespace of the metafield definition."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the metafield definition."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the metafield definition (e.g., 'string', 'integer', 'json')."
+        }
+      },
+      "triggers": [
+        "any"
+      ],
+      "example": {
+        "description": "This action is used to create a new metafield definition. For instance, you can define a new metafield for products or orders to capture specific information like custom attributes."
+      }
+    }
+  ]
+}

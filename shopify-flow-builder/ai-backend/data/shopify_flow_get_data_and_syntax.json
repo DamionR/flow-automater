@@ -1,0 +1,227 @@
+{
+    "workflow_features": {
+      "overview": {
+        "description": "This section describes how to build a workflow using multiple conditions and actions to a trigger that runs when an event happens, including scheduled time triggers, Get data actions, and For each loops."
+      },
+      "scheduled_time_trigger": {
+        "description": "Starts a workflow at a specific time and date, and can be set to repeat periodically (hourly, daily, weekly, monthly)."
+      },
+      "get_data_actions": {
+        "description": "Retrieve data from your store to be used within workflows. These actions allow querying different types of data such as customers, orders, products, and more.",
+        "actions": [
+          "Get collection data",
+          "Get customer data",
+          "Get draft order data",
+          "Get fulfillment order data",
+          "Get order data",
+          "Get product data",
+          "Get product variant data",
+          "Get subscription contract data"
+        ],
+        "liquid_tags": {
+          "description": "When using a Get data action with dates, you can use the date_minus and date_plus Liquid tags to change dates in your query."
+        }
+      },
+      "loops": {
+        "description": "When Get data actions return a list, you can use the For each action to iterate over each item in the list and apply conditions or actions to each item."
+      },
+      "aggregation_actions": {
+        "description": "Used to calculate and aggregate data from lists, such as counting the number of items or summing the values in a list.",
+        "actions": [
+          "Count",
+          "Sum"
+        ]
+      },
+      "known_limitations": {
+        "description": "There are certain limitations to these features, such as maximum list size (100 items), frequency of trigger execution (every 10 minutes), and one action per loop iteration."
+      }
+    },
+    "advanced_workflows": {
+      "examples": [
+        {
+          "title": "Send a daily summary of unfulfilled orders",
+          "description": "This workflow uses the Scheduled time trigger to run every day, retrieves unfulfilled orders, and sends a daily summary email.",
+          "steps": [
+            "Use Get order data",
+            "Apply For each loop to add a tag to each order",
+            "Send email summary"
+          ]
+        },
+        {
+          "title": "Send weekly email summary of low stock variants",
+          "description": "Runs weekly, retrieves low stock product variants, and sends an email summary with variant details.",
+          "steps": [
+            "Use Get product variant data",
+            "Apply Count and Sum actions",
+            "Send email summary"
+          ]
+        },
+        {
+          "title": "Add products with a tag to a collection in the future",
+          "description": "At a future time, fetch products with a specific tag and add them to a collection.",
+          "steps": [
+            "Use Get product data",
+            "Apply Scheduled time trigger",
+            "Add products to a collection"
+          ]
+        },
+        {
+          "title": "Track product variants that are on sale using a product metafield",
+          "description": "Sets a metafield on products if at least one variant is on sale.",
+          "steps": [
+            "Use Get product variant data",
+            "Apply conditions and update metafield"
+          ]
+        }
+      ]
+    },
+    "get_data_actions_details": {
+      "get_collection_data": {
+        "description": "Fetches collection information based on a query.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_customer_data": {
+        "description": "Retrieves customer data based on a query.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_draft_order_data": {
+        "description": "Fetches draft order information.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_fulfillment_order_data": {
+        "description": "Retrieves fulfillment order data.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "status:ON_HOLD"
+      },
+      "get_order_data": {
+        "description": "Fetches order data from your store.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_product_data": {
+        "description": "Fetches product data based on a query.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_product_variant_data": {
+        "description": "Retrieves product variant data.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "updated_at:<='{{ scheduledAt }}' AND updated_at:>'{{ scheduledAt | date_minus: \"1 day\" }}'"
+      },
+      "get_subscription_contract_data": {
+        "description": "Fetches subscription contract data.",
+        "fields": [
+          "Sort data by",
+          "Maximum number of results",
+          "Query string"
+        ],
+        "example_query": "status:ACTIVE"
+      }
+    },
+    "shopify_api_search_syntax": {
+      "overview": {
+        "description": "This page provides information on the syntax for searching text fields across Shopify interfaces including storefront, admin, mobile apps, and various APIs (GraphQL Admin API, Storefront API, etc.)."
+      },
+      "query_grammar": {
+        "description": "A string query is made up of terms, connectives, modifiers, and comparators. The search grammar is expressed similarly to EBNF and uses terminal symbols like whitespace, name, and value.",
+        "example": "query=John Smith",
+        "whitespace": "Any sequence of space, tab, or newline characters.",
+        "name": "Any sequence of non-whitespace, non-special characters.",
+        "value": "Any name or quoted string (single or double quotes). Date values must be a string surrounded by quotes."
+      },
+      "connectives": {
+        "description": "Connectives combine multiple terms in a query. If not specified, AND is implied.",
+        "options": ["AND", "OR"],
+        "default": "AND",
+        "example": "query=state:enabled OR state:disabled"
+      },
+      "terms": {
+        "description": "A term is a query element consisting of a name, comparator, and value. Terms can include optional modifiers and subqueries.",
+        "example": "query=-first_name:Bob AND orders_count:>3 orders_count:<=4"
+      },
+      "modifiers": {
+        "description": "Modifiers negate a query or term.",
+        "options": ["-", "NOT"],
+        "example": "query=-first_name:Bob"
+      },
+      "comparators": {
+        "description": "Comparators define the relationship between a field and its value.",
+        "options": [":", ":<", ":>", ":<=", ":>="],
+        "example": "query=orders_count:>3"
+      },
+      "special_characters": {
+        "description": "Special characters serve specific functions and need to be escaped with a backslash. For example, : \\\\ ( ). Names can include characters like '-', '\\'', and '\\\"' but can't start with them.",
+        "example": "query=name:example\\-field"
+      },
+      "search_syntax_types": {
+        "field_search": {
+          "description": "Searches a specific field for a term.",
+          "example": "query=first_name:Bob age:27"
+        },
+        "default_search": {
+          "description": "A case-insensitive search across all fields.",
+          "example": "query=Bob Norman"
+        },
+        "range_search": {
+          "description": "Searches for values within a range (using operators >, >=, <, and <=).",
+          "example": "query=orders_count:>16 orders_count:<=30"
+        },
+        "not_query": {
+          "description": "Excludes specific terms from the search.",
+          "example": "query=-bob"
+        },
+        "boolean_operators": {
+          "description": "Combine terms using logic operators.",
+          "example": "query=bob OR norman AND Shopify"
+        },
+        "grouping": {
+          "description": "Group terms using parentheses for subqueries.",
+          "example": "query=state:disabled AND (\"sale shopper\" OR VIP)"
+        },
+        "phrase_query": {
+          "description": "Search for exact phrases using double quotes.",
+          "example": "query=first_name:\"Bob Norman\""
+        },
+        "prefix_query": {
+          "description": "Search for terms that begin with specified characters using wildcard *.",
+          "example": "query=norm*"
+        },
+        "exists_query": {
+          "description": "Search for non-null values in a field.",
+          "example": "query=published_at:*"
+        }
+      }
+    }
+  }
+  
